@@ -1,0 +1,24 @@
+{
+  "name": "headless-datepicker",
+  "version": "1.0.0",
+  "description": "Provides the logic for a datepicker. Apply your own UI on top.",
+  "main": "headless-datepicker.js",
+  "scripts": {
+    "test": "mocha headless-datepicker.spec.js",
+    "test:watch": "mocha headless-datepicker.spec.js -w"
+  },
+  "keywords": [
+    "headless",
+    "datepicker",
+    "headless",
+    "calendar",
+    "datepicker",
+    "calendar"
+  ],
+  "author": "Thorbjørn Jelgren (www.therightfoot.dk)",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.3.0"
+  }
+}
