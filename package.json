@@ -20,5 +20,8 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "mocha": "^3.3.0"
+  },
+  "dependencies": {
+    "moment": "^2.18.1"
   }
 }
