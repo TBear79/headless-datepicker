@@ -18,6 +18,7 @@ describe('Headless datepicker', () => {
 		})
 
 		it('should have default options set', () => {
+			expect(sut.dateFormat).to.equal('YYYY-MM-DD')
 			expect(sut.zeroBased).to.be.true
 			expect(sut.minimumDate).to.be.null
 			expect(sut.maximumDate).to.be.null
@@ -33,6 +34,7 @@ describe('Headless datepicker', () => {
 		})
 
 		it('should override default options by setting options in contructor', () => {
+			var dateFormat = 'DD/MM/YYYY'
 			var minimumDate = new Date(2017, 1, 10)
 			var maximumDate = new Date(2017, 1, 20)
 			var disabledDates = [new Date(2017, 1, 14), new Date(2017, 1, 15)]
@@ -45,6 +47,7 @@ describe('Headless datepicker', () => {
 				monthNamesShort: ["Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"]
 			}
 			sut = new HeadlessDatepicker({
+				dateFormat: dateFormat,
 				zeroBased: false,
 				minimumDate: minimumDate,
 				maximumDate: maximumDate,
@@ -52,6 +55,7 @@ describe('Headless datepicker', () => {
 				disabledDates: disabledDates
 			})
 
+			expect(sut.dateFormat).to.equal(dateFormat)
 			expect(sut.zeroBased).to.be.false
 			expect(sut.minimumDate).to.deep.equal(minimumDate)
 			expect(sut.maximumDate).to.deep.equal(maximumDate)
@@ -110,6 +114,12 @@ describe('Headless datepicker', () => {
 
 	describe('The returned date object', () => {
 
+		it('should get date-string in correct moment-format', () => {
+			sut.setSelectedDate(new Date(2017, 3, 15))
+			var date = sut.getSelectedDate()
+			expect(date.formatted).to.equal('2017-04-15')
+		})
+
 		describe('Day names', () => {
 			var weekDays = [new Date(2017, 0, 1), new Date(2017, 0, 2), new Date(2017, 0, 3), new Date(2017, 0, 4), new Date(2017, 0, 5), new Date(2017, 0, 6), new Date(2017, 0, 7)]
 			var dates;
@@ -117,10 +127,6 @@ describe('Headless datepicker', () => {
 			beforeEach(() => {
 				sut.setSelectedDates(weekDays)
 				dates = sut.getSelectedDates()
-			})
-
-			it.skip('should get date-string in correct moment-format', () => {
-
 			})
 
 			it('should get correct day names', () => {

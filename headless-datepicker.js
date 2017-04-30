@@ -7,6 +7,7 @@ module.exports = function (options) {
 
     options = options || {}
 
+    hdp.dateFormat = options.dateFormat || 'YYYY-MM-DD'
     hdp.zeroBased = typeof options.zeroBased === 'undefined' ? true : options.zeroBased
     hdp.minimumDate = options.minimumDate || null
     hdp.maximumDate = options.maximumDate || null
@@ -30,7 +31,7 @@ module.exports = function (options) {
         var month = date.getMonth()
         return {
             date: date,
-            dateString: '',
+            formatted: moment(date).format(hdp.dateFormat),
             dayName: settings.dayNames[day],
             dayNameShort: settings.dayNamesShort[day],
             dayNameMin: settings.dayNamesMin[day],
