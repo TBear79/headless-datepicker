@@ -24,8 +24,6 @@ module.exports = function (options) {
 
 
     var createSelectedDate = function(date){
-
-        // todo: fill in the blanks
         var settings = hdp.localeSettings
         var day = date.getDay()
         var month = date.getMonth()
@@ -37,9 +35,6 @@ module.exports = function (options) {
             dayNameMin: settings.dayNamesMin[day],
             monthName: settings.monthNames[month],
             monthNameShort: settings.monthNamesShort[month],
-            dayInWeek: 0,
-            dayInMonth: 0,
-            dayInYear: 0
         }
     }
 

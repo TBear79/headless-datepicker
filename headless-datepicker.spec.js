@@ -107,9 +107,6 @@ describe('Headless datepicker', () => {
 			expect(selectedDate).not.to.be.null
 			expect(selectedDate.date).to.deep.equal(lastDate)
 		})
-
-		it.skip('should get array of disabled dates after setting disabled date', () => {
-		})
 	})
 
 	describe('The returned date object', () => {
