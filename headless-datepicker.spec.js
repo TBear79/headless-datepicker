@@ -160,9 +160,16 @@ describe('Headless datepicker', () => {
 	})
 
 	describe('Getting dates for a time span', () => {
+
+		var startDate;
+		var endDate;
+
+		beforeEach(() => {
+			startDate = new Date(2017, 2, 1)
+			endDate = new Date(2017, 3, 30)
+		})
+
 		it('should have correct start and end date', () => {
-			var startDate = new Date(2017, 2, 1)
-			var endDate = new Date(2017, 3, 30)
 			var dates = sut.getDatesByTimespan(startDate, endDate)
 
 			expect(dates).to.be.an('array')
@@ -171,28 +178,37 @@ describe('Headless datepicker', () => {
 			expect(dates[60].date).to.deep.equal(endDate)
 		})
 
-		it.skip('should have selected dates marked', () => {
+		it('should have selected dates marked', () => {
+			var testDates = [new Date(2017, 2, 2), new Date(2017, 2, 31), new Date(2017, 3, 29)]
+			sut.setSelectedDates(testDates)
+
+			var dates = sut.getDatesByTimespan(startDate, endDate)
+
+			expect(dates[1].isSelected).to.be.true
+			expect(dates[30].isSelected).to.be.true
+			expect(dates[59].isSelected).to.be.true
+			expect(dates.filter((d) => d.isSelected == false).length).to.equal(58)
 		})
 
 		it.skip('should have minimum date marked', () => {
 		})
 
-		it.skip('should have minimum date included', () => {
+		it.skip('should have minimum date included as active', () => {
 		})
 
-		it.skip('should have dates below minimum as disabled', () => {
+		it.skip('should have dates below minimum as inactive', () => {
 		})
 
 		it.skip('should have maximum date marked', () => {
 		})
 
-		it.skip('should have maximum date included', () => {
+		it.skip('should have maximum date included as active', () => {
 		})
 
-		it.skip('should have dates above maximum as disabled', () => {
+		it.skip('should have dates above maximum as inactive', () => {
 		})
 
-		it.skip('should have disabled dates marked', () => {
+		it.skip('should have disabled dates marked as inactive', () => {
 		})
 
 		it.skip('should respect zero based months', () => {
@@ -205,7 +221,7 @@ describe('Headless datepicker', () => {
 		})
 	})
 
-	describe('Getting dates for a month', () => {
+	describe('Getting dates in grid by months', () => {
 		it.skip('should not show adjacent months', () => {
 		})
 

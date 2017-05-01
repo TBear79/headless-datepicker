@@ -17,13 +17,20 @@ module.exports = function (options) {
         firstDayOfWeek: 0,
         dayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
         dayNamesShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-        dayNamesMin: ['Su','Mo','Tu','We','Th','Fr','Sa'],
-        monthNames: [ 'January','February','March','April','May','June','July','August','September','October','November','December' ],
-        monthNamesShort: [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun','Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ]
+        dayNamesMin: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+        monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        monthNamesShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     }
 
+    var isSelectedCheck = function (date) {
+        var selected = hdp.getSelectedDates()
 
-    var createSelectedDate = function(date){
+        var found = selected.find(function(item) { return item.date.getTime() == date.getTime() })
+
+        return typeof found !== 'undefined'
+    }
+
+    var createHdpDate = function (date) {
         var settings = hdp.localeSettings
         var day = date.getDay()
         var month = date.getMonth()
@@ -34,33 +41,34 @@ module.exports = function (options) {
             dayNameShort: settings.dayNamesShort[day],
             dayNameMin: settings.dayNamesMin[day],
             monthName: settings.monthNames[month],
-            monthNameShort: settings.monthNamesShort[month]
+            monthNameShort: settings.monthNamesShort[month],
+            isSelected: isSelectedCheck(date)
         }
     }
 
-    var addDay = function(date){
+    var addDay = function (date) {
         var newDate = new Date(date);
         newDate.setDate(newDate.getDate() + 1);
         return newDate;
     }
-    
-    hdp.setSelectedDates = function (dates) { 
-        _selectedDates = dates.map(function(date){ return createSelectedDate(date) }) 
+
+    hdp.setSelectedDates = function (dates) {
+        _selectedDates = dates.map(function (date) { return createHdpDate(date) })
     }
 
-    hdp.getSelectedDates = function(){ return _selectedDates }
+    hdp.getSelectedDates = function () { return _selectedDates }
 
     hdp.setSelectedDate = function (date) { hdp.setSelectedDates([date]) }
 
-    hdp.getSelectedDate = function() { return !_selectedDates.length ? null : _selectedDates[_selectedDates.length - 1] }
+    hdp.getSelectedDate = function () { return !_selectedDates.length ? null : _selectedDates[_selectedDates.length - 1] }
 
-    hdp.getDatesByTimespan = function(startDate, endDate) {
+    hdp.getDatesByTimespan = function (startDate, endDate) {
         var dates = []
-        var dateWorker = createSelectedDate(startDate)
-        
-        while(dateWorker.date <= endDate){
+        var dateWorker = createHdpDate(startDate)
+
+        while (dateWorker.date <= endDate) {
             dates.push(dateWorker)
-            dateWorker = createSelectedDate(addDay(dateWorker.date))
+            dateWorker = createHdpDate(addDay(dateWorker.date))
         }
 
         return dates
