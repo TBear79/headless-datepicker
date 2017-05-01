@@ -34,15 +34,18 @@ module.exports = function (options) {
             dayNameShort: settings.dayNamesShort[day],
             dayNameMin: settings.dayNamesMin[day],
             monthName: settings.monthNames[month],
-            monthNameShort: settings.monthNamesShort[month],
+            monthNameShort: settings.monthNamesShort[month]
         }
     }
 
-    
+    var addDay = function(date){
+        var newDate = new Date(date);
+        newDate.setDate(newDate.getDate() + 1);
+        return newDate;
+    }
     
     hdp.setSelectedDates = function (dates) { 
         _selectedDates = dates.map(function(date){ return createSelectedDate(date) }) 
-        
     }
 
     hdp.getSelectedDates = function(){ return _selectedDates }
@@ -50,6 +53,18 @@ module.exports = function (options) {
     hdp.setSelectedDate = function (date) { hdp.setSelectedDates([date]) }
 
     hdp.getSelectedDate = function() { return !_selectedDates.length ? null : _selectedDates[_selectedDates.length - 1] }
+
+    hdp.getDatesByTimespan = function(startDate, endDate) {
+        var dates = []
+        var dateWorker = createSelectedDate(startDate)
+        
+        while(dateWorker.date <= endDate){
+            dates.push(dateWorker)
+            dateWorker = createSelectedDate(addDay(dateWorker.date))
+        }
+
+        return dates
+    }
 
     return hdp
 }

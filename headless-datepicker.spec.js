@@ -159,14 +159,16 @@ describe('Headless datepicker', () => {
 		})
 	})
 
-	describe('Getting date grid', () => {
-		it.skip('should return grid for a given month', () => {
-		})
+	describe('Getting dates for a time span', () => {
+		it('should have correct start and end date', () => {
+			var startDate = new Date(2017, 2, 1)
+			var endDate = new Date(2017, 3, 30)
+			var dates = sut.getDatesByTimespan(startDate, endDate)
 
-		it.skip('should show adjacent months', () => {
-		})
-
-		it.skip('should not show adjacent months', () => {
+			expect(dates).to.be.an('array')
+			expect(dates.length).to.equal(61)
+			expect(dates[0].date).to.deep.equal(startDate)
+			expect(dates[60].date).to.deep.equal(endDate)
 		})
 
 		it.skip('should have selected dates marked', () => {
@@ -200,6 +202,14 @@ describe('Headless datepicker', () => {
 		})
 
 		it.skip('should respect first day of week', () => {
+		})
+	})
+
+	describe('Getting dates for a month', () => {
+		it.skip('should not show adjacent months', () => {
+		})
+
+		it.skip('should show adjacent months', () => {
 		})
 	})
 })
