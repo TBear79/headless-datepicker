@@ -154,7 +154,7 @@ describe('Headless datepicker', () => {
 			})
 
 			it('should get correct month names in short', () => {
-				expect(dates.map(d => (d.monthNameShort))).to.deep.equal([ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun','Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ])
+				expect(dates.map(d => (d.monthNameShort))).to.deep.equal(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
 			})
 		})
 	})
@@ -170,7 +170,7 @@ describe('Headless datepicker', () => {
 		})
 
 		it('should have correct start and end date', () => {
-			var dates = sut.getDatesByTimespan(startDate, endDate)
+			var dates = sut.getDatepicker(startDate, endDate)
 
 			expect(dates).to.be.an('array')
 			expect(dates.length).to.equal(61)
@@ -178,34 +178,73 @@ describe('Headless datepicker', () => {
 			expect(dates[60].date).to.deep.equal(endDate)
 		})
 
-		it('should have selected dates marked', () => {
-			var testDates = [new Date(2017, 2, 2), new Date(2017, 2, 31), new Date(2017, 3, 29)]
-			sut.setSelectedDates(testDates)
+		describe('Selected dates', () => {
+			it('should have selected dates marked', () => {
+				var testDates = [new Date(2017, 2, 2), new Date(2017, 2, 31), new Date(2017, 3, 29)]
+				sut.setSelectedDates(testDates)
 
-			var dates = sut.getDatesByTimespan(startDate, endDate)
+				var dates = sut.getDatepicker(startDate, endDate)
 
-			expect(dates[1].isSelected).to.be.true
-			expect(dates[30].isSelected).to.be.true
-			expect(dates[59].isSelected).to.be.true
-			expect(dates.filter((d) => d.isSelected == false).length).to.equal(58)
+				expect(dates[1].isSelected).to.be.true
+				expect(dates[30].isSelected).to.be.true
+				expect(dates[59].isSelected).to.be.true
+				expect(dates.filter((d) => d.isSelected == false).length).to.equal(58)
+			})
 		})
 
-		it.skip('should have minimum date marked', () => {
+		describe('Minimum date', () => {
+			var minimumDate = new Date(2017, 2, 10)
+			var datepickerResult;
+
+			beforeEach(() => {
+				sut = new HeadlessDatepicker({
+					minimumDate: minimumDate
+				})
+
+				datepickerResult = sut.getDatepicker(startDate, endDate)
+			})
+
+			it('should have minimum date and above included as active', () => {
+				datepickerResult.slice(9).forEach((item) => {
+					assert.isFalse(item.isMinimumDate, `Expected isMinimumDate to be false for date ${item.date}`)
+					assert.isTrue(item.isActive, `Expected active to be true for date ${item.date}`)
+				})
+			})
+
+			it('should have dates below minimum as inactive', () => {
+				datepickerResult.slice(0, 9).forEach((item) => {
+					assert.isTrue(item.isMinimumDate, `Expected isMinimumDate to be true for date ${item.date}`)
+					assert.isFalse(item.isActive, `Expected active to be false for date ${item.date}`)
+				})
+			})
+
 		})
 
-		it.skip('should have minimum date included as active', () => {
-		})
+		describe('Maximum date', () => {
+			var maximumDate = new Date(2017, 2, 10)
+			var datepickerResult;
 
-		it.skip('should have dates below minimum as inactive', () => {
-		})
+			beforeEach(() => {
+				sut = new HeadlessDatepicker({
+					maximumDate: maximumDate
+				})
 
-		it.skip('should have maximum date marked', () => {
-		})
+				datepickerResult = sut.getDatepicker(startDate, endDate)
+			})
 
-		it.skip('should have maximum date included as active', () => {
-		})
+			it('should have maximum date and dates below included as active', () => {
+				datepickerResult.slice(0, 10).forEach((item) => {
+					assert.isFalse(item.isMaximumDate, `Expected isMaximumDate to be false for date ${item.date}`)
+					assert.isTrue(item.isActive, `Expected active to be true for date ${item.date}`)
+				})
+			})
 
-		it.skip('should have dates above maximum as inactive', () => {
+			it('should have dates above maximum as inactive', () => {
+				datepickerResult.slice(10).forEach((item) => {
+					assert.isTrue(item.isMaximumDate, `Expected isMaximumDate to be true for date ${item.date}`)
+					assert.isFalse(item.isActive, `Expected active to be false for date ${item.date}`)
+				})
+			})
 		})
 
 		it.skip('should have disabled dates marked as inactive', () => {

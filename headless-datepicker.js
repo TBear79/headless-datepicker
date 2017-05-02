@@ -30,10 +30,23 @@ module.exports = function (options) {
         return typeof found !== 'undefined'
     }
 
+    var isMinimumDateCheck = function (date) {
+        return hdp.minimumDate ? hdp.minimumDate > date : false
+    }
+
+    var isMaximumCheck = function(date) {
+        return hdp.maximumDate ? hdp.maximumDate < date : false
+    }
+
     var createHdpDate = function (date) {
         var settings = hdp.localeSettings
         var day = date.getDay()
         var month = date.getMonth()
+
+        var isMinimum = isMinimumDateCheck(date)
+        var isMaximum = isMaximumCheck(date)
+        var isActive = !isMinimum && !isMaximum
+
         return {
             date: date,
             formatted: moment(date).format(hdp.dateFormat),
@@ -42,7 +55,10 @@ module.exports = function (options) {
             dayNameMin: settings.dayNamesMin[day],
             monthName: settings.monthNames[month],
             monthNameShort: settings.monthNamesShort[month],
-            isSelected: isSelectedCheck(date)
+            isActive: isActive,
+            isSelected: isSelectedCheck(date),
+            isMinimumDate: isMinimum,
+            isMaximumDate: isMaximum
         }
     }
 
@@ -62,7 +78,7 @@ module.exports = function (options) {
 
     hdp.getSelectedDate = function () { return !_selectedDates.length ? null : _selectedDates[_selectedDates.length - 1] }
 
-    hdp.getDatesByTimespan = function (startDate, endDate) {
+    hdp.getDatepicker = function (startDate, endDate) {
         var dates = []
         var dateWorker = createHdpDate(startDate)
 
