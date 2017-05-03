@@ -1,6 +1,10 @@
-var moment = require('moment')
+var headlessDatepicker = function (options) {
+    var hdMoment = require ? require('moment') : moment 
 
-module.exports = function (options) {
+    if(!hdMoment) throw('headlessDatepicker: momentjs is not available. Please do require(\'moment\') or reference it from a script tag.')
+
+console.log(hdMoment.localeData('en'))
+
     var _selectedDates = []
 
     var hdp = new Object();
@@ -25,24 +29,25 @@ module.exports = function (options) {
     var isSelectedCheck = function (date) {
         var selected = hdp.getSelectedDates()
 
-        var found = selected.find(function(item) { return item.date.getTime() == date.getTime() })
+        var found = selected.find(function(item) { return hdMoment(item.date).isSame(date, 'day') })
 
         return typeof found !== 'undefined'
     }
 
     var isMinimumDateCheck = function (date) {
-        return hdp.minimumDate ? hdp.minimumDate > date : false
+        return hdp.minimumDate ? hdMoment(hdp.minimumDate).isAfter(date, 'day') : false
     }
 
     var isMaximumCheck = function(date) {
-        return hdp.maximumDate ? hdp.maximumDate < date : false
+        return hdp.maximumDate ? hdMoment(hdp.maximumDate).isBefore(date, 'day') : false
     }
 
     var isDisabledCheck = function(date) {
-        return hdp.disabledDates.findIndex(function(item) { return item.getTime() == date.getTime() }) !== -1
+        return hdp.disabledDates.findIndex(function(item) { return hdMoment(item).isSame(date, 'day') }) !== -1
     }
 
     var createHdpDate = function (date) {
+        var momentDate = hdMoment(date)
         var settings = hdp.localeSettings
         var day = date.getDay()
         var month = date.getMonth()
@@ -54,12 +59,13 @@ module.exports = function (options) {
 
         return {
             date: date,
-            formatted: moment(date).format(hdp.dateFormat),
+            formatted: momentDate.format(hdp.dateFormat),
             dayName: settings.dayNames[day],
             dayNameShort: settings.dayNamesShort[day],
             dayNameMin: settings.dayNamesMin[day],
             monthName: settings.monthNames[month],
             monthNameShort: settings.monthNamesShort[month],
+            weekNumber: momentDate.format('W'),
             isActive: isActive,
             isSelected: isSelectedCheck(date),
             isMinimumDate: isMinimum,
@@ -98,3 +104,5 @@ module.exports = function (options) {
 
     return hdp
 }
+
+if(module && module.exports) module.exports = headlessDatepicker

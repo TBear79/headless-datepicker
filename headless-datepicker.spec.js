@@ -1,4 +1,4 @@
-
+var moment = require('moment')
 var chai = require('chai')
 var assert = chai.assert
 var expect = chai.expect
@@ -271,12 +271,19 @@ describe('Headless datepicker', () => {
 			})
 		})
 
-		
+		it('should return correct week number', () => {
+			var dates = sut.getDatepicker(new Date(2016, 11, 25), new Date(2018, 0, 8))
+
+			dates.forEach((item, i) => {
+				var momentWeek = moment(item.date).format('W')
+				assert.isTrue (item.weekNumber == momentWeek, `Expected ${item.weekNumber} equal ${momentWeek} for date ${item.date}. Index (${i})`)
+			})
+		})
+
 
 		it.skip('should respect first day of week', () => {
 		})
 
-		
 	})
 
 	describe('Getting dates in grid by months', () => {
