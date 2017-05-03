@@ -38,6 +38,10 @@ module.exports = function (options) {
         return hdp.maximumDate ? hdp.maximumDate < date : false
     }
 
+    var isDisabledCheck = function(date) {
+        return hdp.disabledDates.findIndex(function(item) { return item.getTime() == date.getTime() }) !== -1
+    }
+
     var createHdpDate = function (date) {
         var settings = hdp.localeSettings
         var day = date.getDay()
@@ -45,7 +49,8 @@ module.exports = function (options) {
 
         var isMinimum = isMinimumDateCheck(date)
         var isMaximum = isMaximumCheck(date)
-        var isActive = !isMinimum && !isMaximum
+        var isDisabled = isDisabledCheck(date)
+        var isActive = !isMinimum && !isMaximum && !isDisabled
 
         return {
             date: date,
@@ -58,7 +63,8 @@ module.exports = function (options) {
             isActive: isActive,
             isSelected: isSelectedCheck(date),
             isMinimumDate: isMinimum,
-            isMaximumDate: isMaximum
+            isMaximumDate: isMaximum,
+            isDisabled: isDisabled
         }
     }
 
