@@ -9,7 +9,7 @@ var headlessDatepicker = function (options) {
 
     options = options || {}
 
-    hdMoment.locale(options.locale || 'en', options.localeData || null)
+    hdMoment.locale(options.locale || 'en', options.localeSettings || null)
 
     hdp.dateFormat = options.dateFormat || 'YYYY-MM-DD'
     hdp.zeroBased = typeof options.zeroBased === 'undefined' ? true : options.zeroBased
@@ -48,7 +48,6 @@ var headlessDatepicker = function (options) {
 
     var createHdpDate = function (date) {
         var momentDate = hdMoment(date)
-        var settings = hdp.localeSettings
         var day = date.getDay()
         var month = date.getMonth()
 
@@ -60,11 +59,6 @@ var headlessDatepicker = function (options) {
         return {
             date: date,
             formatted: momentDate.format(hdp.dateFormat),
-            dayName: settings.dayNames[day],
-            dayNameShort: settings.dayNamesShort[day],
-            dayNameMin: settings.dayNamesMin[day],
-            monthName: settings.monthNames[month],
-            monthNameShort: settings.monthNamesShort[month],
             weekNumber: momentDate.format('W'),
             isActive: isActive,
             isSelected: isSelectedCheck(date),

@@ -109,53 +109,9 @@ describe('Headless datepicker', () => {
 		})
 	})
 
-	describe('The returned date object', () => {
+	describe('Localization', () => {
 
-		it('should get date-string in correct moment-format', () => {
-			sut.setSelectedDate(new Date(2017, 3, 15))
-			var date = sut.getSelectedDate()
-			expect(date.formatted).to.equal('2017-04-15')
-		})
-
-		describe('Day names', () => {
-			var weekDays = [new Date(2017, 0, 1), new Date(2017, 0, 2), new Date(2017, 0, 3), new Date(2017, 0, 4), new Date(2017, 0, 5), new Date(2017, 0, 6), new Date(2017, 0, 7)]
-			var dates;
-
-			beforeEach(() => {
-				sut.setSelectedDates(weekDays)
-				dates = sut.getSelectedDates()
-			})
-
-			it('should get correct day names', () => {
-				expect(dates.map(d => (d.dayName))).to.deep.equal(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'])
-			})
-
-			it('should get correct day names in short', () => {
-				expect(dates.map(d => (d.dayNameShort))).to.deep.equal(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'])
-			})
-
-			it('should get correct day names in mini', () => {
-				expect(dates.map(d => (d.dayNameMin))).to.deep.equal(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'])
-			})
-		})
-
-		describe('Month names', () => {
-			var months = [new Date(2017, 0, 1), new Date(2017, 1, 1), new Date(2017, 2, 1), new Date(2017, 3, 1), new Date(2017, 4, 1), new Date(2017, 5, 1), new Date(2017, 6, 1), new Date(2017, 7, 1), new Date(2017, 8, 1), new Date(2017, 9, 1), new Date(2017, 10, 1), new Date(2017, 11, 1)]
-
-			var dates;
-
-			beforeEach(() => {
-				sut.setSelectedDates(months)
-				dates = sut.getSelectedDates()
-			})
-
-			it('should get correct month names', () => {
-				expect(dates.map(d => (d.monthName))).to.deep.equal(['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'])
-			})
-
-			it('should get correct month names in short', () => {
-				expect(dates.map(d => (d.monthNameShort))).to.deep.equal(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
-			})
+		it.skip('should ...', () => {
 		})
 	})
 
