@@ -3,13 +3,13 @@ var headlessDatepicker = function (options) {
 
     if(!hdMoment) throw('headlessDatepicker: momentjs is not available. Please do require(\'moment\') or reference it from a script tag.')
 
-console.log(hdMoment.localeData('en'))
-
     var _selectedDates = []
 
     var hdp = new Object();
 
     options = options || {}
+
+    hdMoment.locale(options.locale || 'en', options.localeData || null)
 
     hdp.dateFormat = options.dateFormat || 'YYYY-MM-DD'
     hdp.zeroBased = typeof options.zeroBased === 'undefined' ? true : options.zeroBased
