@@ -199,11 +199,26 @@ describe('Headless datepicker', () => {
 				assert.isTrue(item.isActive, `Expected isActive to be true for date ${item.date}. Index (${i})`)
 			})
 		})
-	})
 
-	describe('Additional data', () => {
-		it.skip('should return the additional data that was provided for specific dates', () => {
+		it('should return the additional information that was provided for specific dates', () => {
+			var data1 = { holiday: 'Easter' }
+			var data2 = 'The coolest thing'
+			var data3 = [ 1, 2, 3 ]
 
+			sut = new HeadlessDatepicker({
+					extras: [ 
+						{ date: new Date(2017, 2, 10), data: data1 },
+						{ date: new Date(2017, 2, 20), data: data2 },
+						{ date: new Date(2017, 2, 30), data: data3 }
+					]
+				})
+
+			var dates = sut.getRange(startDate, endDate)
+
+			expect(dates[8].extras).to.be.null
+			expect(dates[9].extras).to.deep.equal(data1)
+			expect(dates[19].extras).to.equal(data2)
+			expect(dates[29].extras).to.deep.equal(data3)
 		})
 	})
 

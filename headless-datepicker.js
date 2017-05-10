@@ -23,6 +23,7 @@ var headlessDatepicker = function (options) {
     hdp.minimumDate = options.minimumDate || null
     hdp.maximumDate = options.maximumDate || null
     hdp.disabledDates = options.disabledDates || []
+    hdp.extras = options.extras || []
 
     var isSelectedCheck = function (date) {
         var selected = hdp.getSelectedDates()
@@ -44,6 +45,12 @@ var headlessDatepicker = function (options) {
         return hdp.disabledDates.findIndex(function (item) { return hdMoment(item).isSame(date, 'day') }) !== -1
     }
 
+    var attachExtras = function (date) {
+        var extras = hdp.extras.filter(function (item) { return hdMoment(item.date).isSame(date, 'day') })
+
+        return extras.length == 0 ? null : extras[0].data
+    }
+
     var createHdpDate = function (date, isAdjacent) {
         var momentDate = hdMoment(date)
         var day = date.getDay()
@@ -61,7 +68,8 @@ var headlessDatepicker = function (options) {
             isMinimumDate: isMinimum,
             isMaximumDate: isMaximum,
             isDisabled: isDisabled,
-            isAdjacent: isAdjacent
+            isAdjacent: isAdjacent,
+            extras: attachExtras(date)
         }
     }
 
