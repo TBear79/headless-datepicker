@@ -204,6 +204,12 @@ var headlessDatepicker = function (options) {
         return calendar
     }
 
+    hdp.getCalendars = function (months, showAdjacentMonths, oneBasedMonth) {
+        var t = this
+
+        return months.map(function(item) { return t.getCalendar(item.year, item.month, showAdjacentMonths, oneBasedMonth) })
+    }
+
     return hdp
 }
 

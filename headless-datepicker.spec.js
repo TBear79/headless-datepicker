@@ -273,6 +273,20 @@ describe('Headless datepicker', () => {
 		})
 	})
 
+	describe('Multiple grids', () => {
+		var months;
+		var calendars;
+
+		beforeEach(() => {
+			months = [{ year: 2017, month: 1 }, { year: 2017, month: 2 }, { year: 2017, month: 3 }, { year: 2018, month: 3 }]
+			calendars = sut.getCalendars(months, true)
+		})
+
+		it('should support multiple months', () => {
+			expect(calendars.length).to.equal(4)
+		})
+	})
+
 	describe('Localization', () => {
 
 		it.skip('should be able to set locale for moment', () => {
