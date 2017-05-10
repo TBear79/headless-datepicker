@@ -18,19 +18,9 @@ describe('Headless datepicker', () => {
 		})
 
 		it('should have default options set', () => {
-			expect(sut.dateFormat).to.equal('YYYY-MM-DD')
-			expect(sut.zeroBased).to.be.true
 			expect(sut.minimumDate).to.be.null
 			expect(sut.maximumDate).to.be.null
 			expect(sut.disabledDates).to.be.an('array')
-			expect(sut.localeSettings).to.deep.equal({
-				firstDayOfWeek: 0,
-				dayNames: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-				dayNamesShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-				dayNamesMin: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
-				monthNames: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-				monthNamesShort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-			})
 		})
 
 		it('should override default options by setting options in contructor', () => {
@@ -38,38 +28,26 @@ describe('Headless datepicker', () => {
 			var minimumDate = new Date(2017, 1, 10)
 			var maximumDate = new Date(2017, 1, 20)
 			var disabledDates = [new Date(2017, 1, 14), new Date(2017, 1, 15)]
-			var localeSettings = {
-				firstDayOfWeek: 1,
-				dayNames: ["Søndag", "Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag"],
-				dayNamesShort: ["Søn", "Man", "Tir", "Ons", "Tor", "Fre", "Lør"],
-				dayNamesMin: ["Sø", "Ma", "Ti", "On", "To", "Fr", "Lø"],
-				monthNames: ["Januar", "Februar", "Marts", "April", "Maj", "Juni", "Juli", "August", "September", "Oktober", "November", "December"],
-				monthNamesShort: ["Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"]
-			}
 			sut = new HeadlessDatepicker({
-				dateFormat: dateFormat,
 				zeroBased: false,
 				minimumDate: minimumDate,
 				maximumDate: maximumDate,
-				localeSettings: localeSettings,
 				disabledDates: disabledDates
 			})
 
-			expect(sut.dateFormat).to.equal(dateFormat)
-			expect(sut.zeroBased).to.be.false
 			expect(sut.minimumDate).to.deep.equal(minimumDate)
 			expect(sut.maximumDate).to.deep.equal(maximumDate)
 			expect(sut.disabledDates).to.deep.equal(disabledDates)
-			expect(sut.localeSettings).to.deep.equal(localeSettings)
 		})
 
 		it('should support multiple objects', () => {
-			var sut2 = new HeadlessDatepicker({
-				zeroBased: false
-			})
+			var date1 = new Date(2017, 3, 1)
+			var date2 = new Date(2017, 4, 1)
+			sut = new HeadlessDatepicker({ minimumDate: date1 })
+			var sut2 = new HeadlessDatepicker({ minimumDate: date2 })
 
-			expect(sut.zeroBased).to.be.true
-			expect(sut2.zeroBased).to.be.false
+			expect(sut.minimumDate).to.deep.equal(date1)
+			expect(sut2.minimumDate).to.deep.equal(date2)
 		})
 
 		it('should not pollute the global namespace', () => {
@@ -84,7 +62,7 @@ describe('Headless datepicker', () => {
 			var selectedDate = sut.getSelectedDate()
 
 			expect(selectedDate).not.to.be.null
-			expect(selectedDate.date).to.deep.equal(testDate)
+			expect(selectedDate.moment.toDate()).to.deep.equal(testDate)
 		})
 
 		it('should get array of selected dates after setting multiple dates', () => {
@@ -95,7 +73,7 @@ describe('Headless datepicker', () => {
 			expect(selectedDates).not.to.be.null
 			expect(selectedDates).to.be.an('array')
 			expect(selectedDates.length).to.equal(3)
-			expect(selectedDates.map((s) => { return s.date })).to.deep.equal(testDates)
+			expect(selectedDates.map((s) => { return s.moment.toDate() })).to.deep.equal(testDates)
 		})
 
 		it('should return latest selected date in getDate after setting multiple dates', () => {
@@ -105,13 +83,7 @@ describe('Headless datepicker', () => {
 			var selectedDate = sut.getSelectedDate()
 
 			expect(selectedDate).not.to.be.null
-			expect(selectedDate.date).to.deep.equal(lastDate)
-		})
-	})
-
-	describe('Localization', () => {
-
-		it.skip('should ...', () => {
+			expect(selectedDate.moment.toDate()).to.deep.equal(lastDate)
 		})
 	})
 
@@ -126,12 +98,12 @@ describe('Headless datepicker', () => {
 		})
 
 		it('should have correct start and end date', () => {
-			var dates = sut.getDatepicker(startDate, endDate)
+			var dates = sut.getRange(startDate, endDate)
 
 			expect(dates).to.be.an('array')
 			expect(dates.length).to.equal(61)
-			expect(dates[0].date).to.deep.equal(startDate)
-			expect(dates[60].date).to.deep.equal(endDate)
+			expect(dates[0].moment.toDate()).to.deep.equal(startDate)
+			expect(dates[60].moment.toDate()).to.deep.equal(endDate)
 		})
 
 		describe('Selected dates', () => {
@@ -139,7 +111,7 @@ describe('Headless datepicker', () => {
 				var testDates = [new Date(2017, 2, 2), new Date(2017, 2, 31), new Date(2017, 3, 29)]
 				sut.setSelectedDates(testDates)
 
-				var dates = sut.getDatepicker(startDate, endDate)
+				var dates = sut.getRange(startDate, endDate)
 
 				expect(dates[1].isSelected).to.be.true
 				expect(dates[30].isSelected).to.be.true
@@ -157,7 +129,7 @@ describe('Headless datepicker', () => {
 					minimumDate: minimumDate
 				})
 
-				datepickerResult = sut.getDatepicker(startDate, endDate)
+				datepickerResult = sut.getRange(startDate, endDate)
 			})
 
 			it('should have minimum date and above marked as active', () => {
@@ -185,7 +157,7 @@ describe('Headless datepicker', () => {
 					maximumDate: maximumDate
 				})
 
-				datepickerResult = sut.getDatepicker(startDate, endDate)
+				datepickerResult = sut.getRange(startDate, endDate)
 			})
 
 			it('should have maximum date and dates below marked as active', () => {
@@ -205,18 +177,19 @@ describe('Headless datepicker', () => {
 
 
 		it('should have disabled dates marked as inactive', () => {
+			var disabledDates = [new Date(2017, 2, 5), new Date(2017, 2, 25), new Date(2017, 3, 15)]
 			sut = new HeadlessDatepicker({
-				disabledDates: [new Date(2017, 2, 5), new Date(2017, 2, 25), new Date(2017, 3, 15)]
+				disabledDates: disabledDates
 			})
 
-			var dates = sut.getDatepicker(startDate, endDate)
+			var dates = sut.getRange(startDate, endDate)
 
-			expect(dates[4].formatted).to.equal('2017-03-05')
-			expect(dates[24].formatted).to.equal('2017-03-25')
-			expect(dates[45].formatted).to.equal('2017-04-15')
+			expect(dates[4].moment.toDate()).to.deep.equal(disabledDates[0])
+			expect(dates[24].moment.toDate()).to.deep.equal(disabledDates[1])
+			expect(dates[45].moment.toDate()).to.deep.equal(disabledDates[2])
 
 			dates.forEach((item, i) => {
-				if(i == 4 || i == 24 || i == 45) {
+				if (i == 4 || i == 24 || i == 45) {
 					expect(item.isDisabled).to.true
 					expect(item.isActive).to.false
 					return
@@ -226,34 +199,139 @@ describe('Headless datepicker', () => {
 				assert.isTrue(item.isActive, `Expected isActive to be true for date ${item.date}. Index (${i})`)
 			})
 		})
+	})
 
-		it('should return correct week number', () => {
-			var dates = sut.getDatepicker(new Date(2016, 11, 25), new Date(2018, 0, 8))
+	describe('Additional data', () => {
+		it.skip('should return the additional data that was provided for specific dates', () => {
 
-			dates.forEach((item, i) => {
-				var momentWeek = moment(item.date).format('W')
-				assert.isTrue (item.weekNumber == momentWeek, `Expected ${item.weekNumber} equal ${momentWeek} for date ${item.date}. Index (${i})`)
-			})
 		})
-
-
-		it.skip('should respect first day of week', () => {
-		})
-
 	})
 
 	describe('Getting dates in grid by months', () => {
-		it.skip('should respect zero based months', () => {
+		var year;
+		var month;
+		var calendar;
+
+		beforeEach(() => {
+			year = 2017
+			month = 3
+			calendar = sut.getCalendar(year, month, false)
 		})
 
-		it.skip('should respect non-zero based months', () => {
+		it('should return the calendar as an object with dates divided into weeks', () => {
+			expect(calendar.weeks.length).to.equal(6)
 		})
 
-		it.skip('should not show adjacent months', () => {
+		it('should return 7 days in all weeks', () => {
+			calendar.weeks.forEach(week => {
+				assert.isTrue(week.length == 7, `Expected week to have 7 days: ${week}`)
+			})
 		})
 
-		it.skip('should show adjacent months', () => {
+		it('should return correct week day names in correct order', () => {
+			expect(calendar.weekDays.full).to.deep.equal(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'])
+			expect(calendar.weekDays.short).to.deep.equal(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'])
+			expect(calendar.weekDays.min).to.deep.equal(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'])
+		})
+
+		it('should respect zero based months', () => {
+			expect(calendar.month.full).to.equal('April')
+			expect(calendar.month.short).to.equal('Apr')
+		})
+
+		it('should respect one based months', () => {
+			calendar = sut.getCalendar(year, month, false, true)
+
+			expect(calendar.month.full).to.equal('March')
+			expect(calendar.month.short).to.equal('Mar')
+		})
+
+		it('should not show adjacent months', () => {
+			var firstWeekDays = calendar.weeks[0].slice(0, 6)
+			var lastWeekDays = calendar.weeks[5].slice(1)
+
+			expect(firstWeekDays).to.deep.equal([ null, null, null, null, null, null ])
+			expect(lastWeekDays).to.deep.equal([ null, null, null, null, null, null ])
+		})
+
+		it('should show previous adjacent month', () => {
+			calendar = sut.getCalendar(year, month, true)
+
+			var days = calendar.weeks[0].slice(0, 6).map(week => week.moment.format('YYYY-MM-DD'))
+
+			expect(calendar.weeks[0][6].moment.format('YYYY-MM-DD')).to.equal('2017-04-01')
+			expect(days).to.deep.equal([ '2017-03-26', '2017-03-27', '2017-03-28', '2017-03-29', '2017-03-30', '2017-03-31' ])
+		})
+
+		it('should show next adjacent month', () => {
+			calendar = sut.getCalendar(year, month, true)
+
+			var days = calendar.weeks[5].slice(1).map(week => week.moment.format('YYYY-MM-DD'))
+
+			expect(calendar.weeks[5][0].moment.format('YYYY-MM-DD')).to.equal('2017-04-30')
+			expect(days).to.deep.equal([ '2017-05-01', '2017-05-02', '2017-05-03', '2017-05-04', '2017-05-05', '2017-05-06' ])
+		})
+	})
+
+	describe('Localization', () => {
+
+		it.skip('should be able to set locale for moment', () => {
+			var dates;
+			sut = new HeadlessDatepicker({ locale: false })
+
+			dates = sut.getRange(new Date(), new Date())
+			expect(dates[0].moment.fromNow()).to.equal('a few seconds ago')
+
+			sut = new HeadlessDatepicker({ locale: 'da', localeSettings: da })
+
+			dates = sut.getRange(new Date(), new Date())
+			expect(dates[0].moment.fromNow()).to.equal('få sekunder siden')
 		})
 	})
 })
 
+
+var da = {
+	months: "januar_februar_marts_april_maj_juni_juli_august_september_oktober_november_december".split("_"),
+	monthsShort: "jan_feb_mar_apr_maj_jun_jul_aug_sep_okt_nov_dec".split("_"),
+	weekdays: "søndag_mandag_tirsdag_onsdag_torsdag_fredag_lørdag".split("_"),
+	weekdaysShort: "søn_man_tir_ons_tor_fre_lør".split("_"),
+	weekdaysMin: "sø_ma_ti_on_to_fr_lø".split("_"),
+	longDateFormat: {
+		LT: "HH:mm",
+		LTS: "HH:mm:ss",
+		L: "DD/MM/YYYY",
+		LL: "D. MMMM YYYY",
+		LLL: "D. MMMM YYYY HH:mm",
+		LLLL: "dddd [d.] D. MMMM YYYY [kl.] HH:mm"
+	},
+	calendar: {
+		sameDay: "[i dag kl.] LT",
+		nextDay: "[i morgen kl.] LT",
+		nextWeek: "på dddd [kl.] LT",
+		lastDay: "[i går kl.] LT",
+		lastWeek: "[i] dddd[s kl.] LT",
+		sameElse: "L"
+	},
+	relativeTime: {
+		future: "om %s",
+		past: "%s siden",
+		s: "få sekunder",
+		m: "et minut",
+		mm: "%d minutter",
+		h: "en time",
+		hh: "%d timer",
+		d: "en dag",
+		dd: "%d dage",
+		M: "en måned",
+		MM: "%d måneder",
+		y: "et år",
+		yy: "%d år"
+	},
+	dayOfMonthOrdinalParse: /\d{1,2}\./, ordinal: "%d.",
+	ordinal: "%d.",
+	week: {
+		dow: 1,
+		doy: 4
+	}
+}
