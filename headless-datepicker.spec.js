@@ -303,8 +303,7 @@ describe('Headless datepicker', () => {
 	})
 
 	describe('Localization', () => {
-
-		it.skip('should be able to set locale for moment', () => {
+		it('should be able to set locale for moment', () => {
 			var dates;
 			sut = new HeadlessDatepicker({ locale: false })
 

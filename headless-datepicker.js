@@ -12,13 +12,13 @@ var headlessDatepicker = function (options) {
     var momentLocale = options.locale || 'en'
 
 
-    // if (options.localeSettings) {
-    //     hdMoment.updateLocale(momentLocale, options.localeSettings)
-    // }
-    // else {
-    //     if (momentLocale !== hdMoment.locale())
-    //         hdMoment.locale(momentLocale)
-    // }
+    if (options.localeSettings) {
+        hdMoment.updateLocale(momentLocale, options.localeSettings)
+    }
+    else { 
+        if (momentLocale !== hdMoment.locale()) 
+            hdMoment.locale(momentLocale,  options.localeSettings)
+    }
 
     hdp.minimumDate = options.minimumDate || null
     hdp.maximumDate = options.maximumDate || null
