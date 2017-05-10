@@ -181,7 +181,7 @@ var headlessDatepicker = function (options) {
     hdp.getCalendar = function (year, month, showAdjacentMonths, oneBasedMonth) {
 
         var startDate = hdMoment().year(year).month(month).date(1).toDate()
-        var endDate = hdMoment().year(year).month(month).add('months', 1).date(0).toDate()
+        var endDate = hdMoment().year(year).month(month).add(1, 'months').date(0).toDate()
 
         var range = this.getRange(startDate, endDate)
 
