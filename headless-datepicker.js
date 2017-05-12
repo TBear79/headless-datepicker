@@ -89,7 +89,7 @@ var headlessDatepicker = function (options) {
         }
 
         var firstDayOfWeekIndex = range.findIndex(function (item) {
-            return item.moment.format('d') == 0
+            return item.moment.weekday() == 0
         })
 
         for (var i = firstDayOfWeekIndex; i < firstDayOfWeekIndex + 7; i++) {
@@ -117,7 +117,7 @@ var headlessDatepicker = function (options) {
     }
 
     var getAdjacentBefore = function (momentDate, showAdjacentMonths) {
-        var dayOfWeek = momentDate.format('d')
+        var dayOfWeek = momentDate.weekday()
         var clonedDate = momentDate.clone()
 
         clonedDate.subtract(dayOfWeek, 'days')
@@ -133,7 +133,7 @@ var headlessDatepicker = function (options) {
     }
 
     var getAdjacentAfter = function (momentDate, showAdjacentMonths) {
-        var dayOfWeek = momentDate.format('d')
+        var dayOfWeek = momentDate.weekday()
         var clonedDate = momentDate.clone()
 
         clonedDate.add(6 - dayOfWeek, 'days')
@@ -184,7 +184,6 @@ var headlessDatepicker = function (options) {
 
     var fixedMode = function (range) {
         var weeks = adjacentMode(range)
-        console.log('WEEK LENGTH', weeks.length)
         while (weeks.length < 6) {
             var lastDay = weeks[weeks.length - 1].slice(-1)[0].moment.clone()
             var nextDay = lastDay.add(1, 'day')

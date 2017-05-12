@@ -339,15 +339,32 @@ describe('Headless datepicker', () => {
 	describe('Localization', () => {
 		it('should be able to set locale for moment', () => {
 			var dates;
-			sut = new HeadlessDatepicker({ locale: false })
+
 
 			dates = sut.getRange(new Date(), new Date())
 			expect(dates[0].moment.fromNow()).to.equal('a few seconds ago')
+
 
 			sut = new HeadlessDatepicker({ locale: 'da', localeSettings: da })
 
 			dates = sut.getRange(new Date(), new Date())
 			expect(dates[0].moment.fromNow()).to.equal('få sekunder siden')
+		})
+
+		it('should respect first day in week, based on locale', () => {
+			var dates;
+
+			dates = sut.getRange(new Date(2017, 3, 1), new Date(2017, 3, 3))
+			expect(dates[0].moment.weekday()).to.equal(6)
+			expect(dates[1].moment.weekday()).to.equal(0)
+			expect(dates[2].moment.weekday()).to.equal(1)
+
+			sut = new HeadlessDatepicker({ locale: 'da', localeSettings: da })
+
+			dates = sut.getRange(new Date(2017, 3, 1), new Date(2017, 3, 3))
+			expect(dates[0].moment.weekday()).to.equal(5)
+			expect(dates[1].moment.weekday()).to.equal(6)
+			expect(dates[2].moment.weekday()).to.equal(0)
 		})
 	})
 })
