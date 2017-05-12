@@ -1,7 +1,7 @@
 var headlessDatepicker = function (options) {
-    var hdMoment = require ? require('moment') : moment
+    var localMoment = require ? require('moment') : moment
 
-    if (!hdMoment) throw ('headlessDatepicker: momentjs is not available. Please do require(\'moment\') or reference it from a script tag.')
+    if (!localMoment) throw ('headlessDatepicker: momentjs is not available. Please do require(\'moment\') or reference it from a script tag.')
 
     var _selectedDates = []
 
@@ -9,21 +9,19 @@ var headlessDatepicker = function (options) {
 
     options = options || {}
 
-    var momentLocale = options.locale || 'en'
-
-
-    if (options.localeSettings) {
-        hdMoment.updateLocale(momentLocale, options.localeSettings)
-    }
-    else { 
-        if (momentLocale !== hdMoment.locale()) 
-            hdMoment.locale(momentLocale,  options.localeSettings)
-    }
+    hdp.locale = options.locale || 'en'
+    hdp.localeSettings = options.localeSettings 
 
     hdp.minimumDate = options.minimumDate || null
     hdp.maximumDate = options.maximumDate || null
     hdp.disabledDates = options.disabledDates || []
     hdp.extras = options.extras || []
+
+    var hdMoment = function(date) {
+        var m = localMoment(date)
+        m.locale(hdp.locale, hdp.localeSettings)
+        return m
+    }
 
     var isSelectedCheck = function (date) {
         var selected = hdp.getSelectedDates()
