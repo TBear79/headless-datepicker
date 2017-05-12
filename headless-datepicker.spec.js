@@ -308,6 +308,18 @@ describe('Headless datepicker', () => {
 				expect(days).to.deep.equal(['2017-05-01', '2017-05-02', '2017-05-03', '2017-05-04', '2017-05-05', '2017-05-06'])
 			})
 		})
+
+		describe('"fixed"-mode', function () {
+			it('should show 6 weeks for month with 5 weeks', () => {
+				calendar = sut.getCalendar(year, 2, 'fixed')
+				expect(calendar.weeks.slice(-1)[0].map(item => item.moment.format('YYYY-MM-DD') )).to.deep.equal(['2017-04-02', '2017-04-03', '2017-04-04', '2017-04-05', '2017-04-06', '2017-04-07', '2017-04-08'])
+			})
+
+			it('should show 6 weeks for month with 6 weeks', () => {
+				calendar = sut.getCalendar(year, month, 'fixed')
+				expect(calendar.weeks.slice(-1)[0].map(item => item.moment.format('YYYY-MM-DD') )).to.deep.equal(['2017-04-30', '2017-05-01', '2017-05-02', '2017-05-03', '2017-05-04', '2017-05-05', '2017-05-06'])
+			})
+		})
 	})
 
 	describe('Multiple grids', () => {
@@ -316,7 +328,7 @@ describe('Headless datepicker', () => {
 
 		beforeEach(() => {
 			months = [{ year: 2017, month: 1 }, { year: 2017, month: 2 }, { year: 2017, month: 3 }, { year: 2018, month: 3 }]
-			calendars = sut.getCalendars(months, true)
+			calendars = sut.getCalendars(months)
 		})
 
 		it('should support multiple months', () => {

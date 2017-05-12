@@ -137,6 +137,7 @@ var headlessDatepicker = function (options) {
         var clonedDate = momentDate.clone()
 
         clonedDate.add(6 - dayOfWeek, 'days')
+
         var dates = []
 
         while (clonedDate.isAfter(momentDate)) {
@@ -177,6 +178,26 @@ var headlessDatepicker = function (options) {
         return weeks
     }
 
+    var adjacentMode = function (range) {
+        return fillMode(range, true)
+    }
+
+    var fixedMode = function (range) {
+        var weeks = adjacentMode(range)
+        console.log('WEEK LENGTH', weeks.length)
+        while (weeks.length < 6) {
+            var lastDay = weeks[weeks.length - 1].slice(-1)[0].moment.clone()
+            var nextDay = lastDay.add(1, 'day')
+            var newWeek = getAdjacentAfter(nextDay, true)
+            
+            // getAdjacentAfter only works with dates AFTER the the date passed. So we have to place the new date at the beginning
+            newWeek.unshift(createAdjacentDateEntry(nextDay, true)) 
+
+            weeks.push(newWeek)
+        }
+        return weeks
+    }
+
     var getWeeks = function (range, mode) {
         var showAdjacentMonths = false
 
@@ -184,9 +205,13 @@ var headlessDatepicker = function (options) {
             case 'exact':
                 return exactMode(range)
             case 'adjacent':
-                showAdjacentMonths = true
+                return adjacentMode(range)
             case 'fill':
-                return fillMode(range, showAdjacentMonths)
+                return fillMode(range, false)
+            case 'fixed':
+                return fixedMode(range)
+            default:
+                throw new Error('Invalid mode: ' + mode)
         }
     }
 
@@ -223,8 +248,6 @@ var headlessDatepicker = function (options) {
         var weekDays = getWeekDays(range)
 
         var weeks = getWeeks(range, mode)
-
-
 
         var calendar = {
             moment: hdMoment,
