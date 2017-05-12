@@ -10,14 +10,14 @@ var headlessDatepicker = function (options) {
     options = options || {}
 
     hdp.locale = options.locale || 'en'
-    hdp.localeSettings = options.localeSettings 
+    hdp.localeSettings = options.localeSettings
 
     hdp.minimumDate = options.minimumDate || null
     hdp.maximumDate = options.maximumDate || null
     hdp.disabledDates = options.disabledDates || []
     hdp.extras = options.extras || []
 
-    var hdMoment = function(date) {
+    var hdMoment = function (date) {
         var m = localMoment(date)
         m.locale(hdp.locale, hdp.localeSettings)
         return m
@@ -149,7 +149,7 @@ var headlessDatepicker = function (options) {
         return dates
     }
 
-    var splitIntoWeeks = function (range, showAdjacentMonths) {
+    var splitIntoWeeks = function (range) {
         var weeks = []
 
         var startWeekNumber = range[0].moment.week()
@@ -162,14 +162,12 @@ var headlessDatepicker = function (options) {
         return weeks
     }
 
-    // var exactMode = function(year, month) {
-        
-    // }
+    var exactMode = function (range) {
+        return splitIntoWeeks(range)
+    }
 
-    var fillMode = function(range, showAdjacentMonths){
-        
-
-        var weeks = splitIntoWeeks(range, true) 
+    var fillMode = function (range, showAdjacentMonths) {
+        var weeks = splitIntoWeeks(range)
         var lastWeekIndex = weeks.length - 1
 
         weeks[0] = getAdjacentBefore(range[0].moment, showAdjacentMonths).concat(weeks[0])
@@ -179,11 +177,12 @@ var headlessDatepicker = function (options) {
         return weeks
     }
 
-    var getWeeks = function(range, mode){
+    var getWeeks = function (range, mode) {
         var showAdjacentMonths = false
 
         switch (mode) {
             case 'exact':
+                return exactMode(range)
             case 'adjacent':
                 showAdjacentMonths = true
             case 'fill':
@@ -239,7 +238,7 @@ var headlessDatepicker = function (options) {
 
     hdp.getCalendars = function (months, mode, oneBasedMonth) {
         var t = this
-        return months.map(function(item) { return t.getCalendar(item.year, item.month, mode, oneBasedMonth) })
+        return months.map(function (item) { return t.getCalendar(item.year, item.month, mode, oneBasedMonth) })
     }
 
     return hdp

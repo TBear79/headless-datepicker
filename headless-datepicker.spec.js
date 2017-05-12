@@ -241,8 +241,6 @@ describe('Headless datepicker', () => {
 				expect(calendar.weeks.length).to.equal(6)
 			})
 
-			
-
 			it('should return correct week day names in correct order', () => {
 				expect(calendar.weekDays.full).to.deep.equal(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'])
 				expect(calendar.weekDays.short).to.deep.equal(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'])
@@ -255,10 +253,19 @@ describe('Headless datepicker', () => {
 			})
 
 			it('should respect one based months', () => {
-				calendar = sut.getCalendar(year, month, null, true)
+				calendar = sut.getCalendar(year, month, 'exact', true)
 
 				expect(calendar.month.full).to.equal('March')
 				expect(calendar.month.short).to.equal('Mar')
+			})
+
+			it('should return correct number of days for each week', function () {
+				expect(calendar.weeks[0].length).to.equal(1)
+				expect(calendar.weeks[1].length).to.equal(7)
+				expect(calendar.weeks[2].length).to.equal(7)
+				expect(calendar.weeks[3].length).to.equal(7)
+				expect(calendar.weeks[4].length).to.equal(7)
+				expect(calendar.weeks[5].length).to.equal(1)
 			})
 		})
 
