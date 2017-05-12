@@ -162,6 +162,35 @@ var headlessDatepicker = function (options) {
         return weeks
     }
 
+    // var exactMode = function(year, month) {
+        
+    // }
+
+    var fillMode = function(range, showAdjacentMonths){
+        
+
+        var weeks = splitIntoWeeks(range, true) 
+        var lastWeekIndex = weeks.length - 1
+
+        weeks[0] = getAdjacentBefore(range[0].moment, showAdjacentMonths).concat(weeks[0])
+
+        weeks[lastWeekIndex] = weeks[lastWeekIndex].concat(getAdjacentAfter(range[range.length - 1].moment, showAdjacentMonths))
+
+        return weeks
+    }
+
+    var getWeeks = function(range, mode){
+        var showAdjacentMonths = false
+
+        switch (mode) {
+            case 'exact':
+            case 'adjacent':
+                showAdjacentMonths = true
+            case 'fill':
+                return fillMode(range, showAdjacentMonths)
+        }
+    }
+
     hdp.setSelectedDates = function (dates) {
         _selectedDates = dates.map(function (date) { return createHdpDate(date, false) })
     }
@@ -184,21 +213,19 @@ var headlessDatepicker = function (options) {
         return dates
     }
 
-    hdp.getCalendar = function (year, month, showAdjacentMonths, oneBasedMonth) {
+    hdp.getCalendar = function (year, month, mode, oneBasedMonth) {
+        mode = mode || 'exact'
 
         var startDate = hdMoment().year(year).month(month).date(1).toDate()
         var endDate = hdMoment().year(year).month(month).add(1, 'months').date(0).toDate()
 
-        var range = this.getRange(startDate, endDate)
+        var range = hdp.getRange(startDate, endDate)
 
         var weekDays = getWeekDays(range)
 
-        var weeks = splitIntoWeeks(range, true)
-        var lastWeekIndex = weeks.length - 1
+        var weeks = getWeeks(range, mode)
 
-        weeks[0] = getAdjacentBefore(range[0].moment, showAdjacentMonths).concat(weeks[0])
 
-        weeks[lastWeekIndex] = weeks[lastWeekIndex].concat(getAdjacentAfter(range[range.length - 1].moment, showAdjacentMonths))
 
         var calendar = {
             moment: hdMoment,
@@ -210,10 +237,9 @@ var headlessDatepicker = function (options) {
         return calendar
     }
 
-    hdp.getCalendars = function (months, showAdjacentMonths, oneBasedMonth) {
+    hdp.getCalendars = function (months, mode, oneBasedMonth) {
         var t = this
-
-        return months.map(function(item) { return t.getCalendar(item.year, item.month, showAdjacentMonths, oneBasedMonth) })
+        return months.map(function(item) { return t.getCalendar(item.year, item.month, mode, oneBasedMonth) })
     }
 
     return hdp

@@ -203,15 +203,15 @@ describe('Headless datepicker', () => {
 		it('should return the additional information that was provided for specific dates', () => {
 			var data1 = { holiday: 'Easter' }
 			var data2 = 'The coolest thing'
-			var data3 = [ 1, 2, 3 ]
+			var data3 = [1, 2, 3]
 
 			sut = new HeadlessDatepicker({
-					extras: [ 
-						{ date: new Date(2017, 2, 10), data: data1 },
-						{ date: new Date(2017, 2, 20), data: data2 },
-						{ date: new Date(2017, 2, 30), data: data3 }
-					]
-				})
+				extras: [
+					{ date: new Date(2017, 2, 10), data: data1 },
+					{ date: new Date(2017, 2, 20), data: data2 },
+					{ date: new Date(2017, 2, 30), data: data3 }
+				]
+			})
 
 			var dates = sut.getRange(startDate, endDate)
 
@@ -230,61 +230,76 @@ describe('Headless datepicker', () => {
 		beforeEach(() => {
 			year = 2017
 			month = 3
-			calendar = sut.getCalendar(year, month, false)
 		})
 
-		it('should return the calendar as an object with dates divided into weeks', () => {
-			expect(calendar.weeks.length).to.equal(6)
-		})
+		describe('"exact"-mode', function () {
+			beforeEach(() => {
+				calendar = sut.getCalendar(year, month, 'exact')
+			})
 
-		it('should return 7 days in all weeks', () => {
-			calendar.weeks.forEach(week => {
-				assert.isTrue(week.length == 7, `Expected week to have 7 days: ${week}`)
+			it('should return the calendar as an object with dates divided into weeks', () => {
+				expect(calendar.weeks.length).to.equal(6)
+			})
+
+			
+
+			it('should return correct week day names in correct order', () => {
+				expect(calendar.weekDays.full).to.deep.equal(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'])
+				expect(calendar.weekDays.short).to.deep.equal(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'])
+				expect(calendar.weekDays.min).to.deep.equal(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'])
+			})
+
+			it('should respect zero based months', () => {
+				expect(calendar.month.full).to.equal('April')
+				expect(calendar.month.short).to.equal('Apr')
+			})
+
+			it('should respect one based months', () => {
+				calendar = sut.getCalendar(year, month, null, true)
+
+				expect(calendar.month.full).to.equal('March')
+				expect(calendar.month.short).to.equal('Mar')
 			})
 		})
 
-		it('should return correct week day names in correct order', () => {
-			expect(calendar.weekDays.full).to.deep.equal(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'])
-			expect(calendar.weekDays.short).to.deep.equal(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'])
-			expect(calendar.weekDays.min).to.deep.equal(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'])
+		describe('"fill"-mode', function () {
+			beforeEach(() => {
+				calendar = sut.getCalendar(year, month, 'fill')
+			})
+
+			it('should return 7 days in all weeks', () => {
+				calendar.weeks.forEach(week => {
+					assert.isTrue(week.length == 7, `Expected week to have 7 days: ${week}`)
+				})
+			})
+
+			it('should not show adjacent months', () => {
+				var firstWeekDays = calendar.weeks[0].slice(0, 6)
+				var lastWeekDays = calendar.weeks[5].slice(1)
+
+				expect(firstWeekDays).to.deep.equal([null, null, null, null, null, null])
+				expect(lastWeekDays).to.deep.equal([null, null, null, null, null, null])
+			})
 		})
 
-		it('should respect zero based months', () => {
-			expect(calendar.month.full).to.equal('April')
-			expect(calendar.month.short).to.equal('Apr')
-		})
+		describe('"adjacent"-mode', function () {
+			beforeEach(() => {
+				calendar = sut.getCalendar(year, month, 'adjacent')
+			})
 
-		it('should respect one based months', () => {
-			calendar = sut.getCalendar(year, month, false, true)
+			it('should show previous adjacent month', () => {
+				var days = calendar.weeks[0].slice(0, 6).map(week => week.moment.format('YYYY-MM-DD'))
 
-			expect(calendar.month.full).to.equal('March')
-			expect(calendar.month.short).to.equal('Mar')
-		})
+				expect(calendar.weeks[0][6].moment.format('YYYY-MM-DD')).to.equal('2017-04-01')
+				expect(days).to.deep.equal(['2017-03-26', '2017-03-27', '2017-03-28', '2017-03-29', '2017-03-30', '2017-03-31'])
+			})
 
-		it('should not show adjacent months', () => {
-			var firstWeekDays = calendar.weeks[0].slice(0, 6)
-			var lastWeekDays = calendar.weeks[5].slice(1)
+			it('should show next adjacent month', () => {
+				var days = calendar.weeks[5].slice(1).map(week => week.moment.format('YYYY-MM-DD'))
 
-			expect(firstWeekDays).to.deep.equal([ null, null, null, null, null, null ])
-			expect(lastWeekDays).to.deep.equal([ null, null, null, null, null, null ])
-		})
-
-		it('should show previous adjacent month', () => {
-			calendar = sut.getCalendar(year, month, true)
-
-			var days = calendar.weeks[0].slice(0, 6).map(week => week.moment.format('YYYY-MM-DD'))
-
-			expect(calendar.weeks[0][6].moment.format('YYYY-MM-DD')).to.equal('2017-04-01')
-			expect(days).to.deep.equal([ '2017-03-26', '2017-03-27', '2017-03-28', '2017-03-29', '2017-03-30', '2017-03-31' ])
-		})
-
-		it('should show next adjacent month', () => {
-			calendar = sut.getCalendar(year, month, true)
-
-			var days = calendar.weeks[5].slice(1).map(week => week.moment.format('YYYY-MM-DD'))
-
-			expect(calendar.weeks[5][0].moment.format('YYYY-MM-DD')).to.equal('2017-04-30')
-			expect(days).to.deep.equal([ '2017-05-01', '2017-05-02', '2017-05-03', '2017-05-04', '2017-05-05', '2017-05-06' ])
+				expect(calendar.weeks[5][0].moment.format('YYYY-MM-DD')).to.equal('2017-04-30')
+				expect(days).to.deep.equal(['2017-05-01', '2017-05-02', '2017-05-03', '2017-05-04', '2017-05-05', '2017-05-06'])
+			})
 		})
 	})
 
