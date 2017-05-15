@@ -103,16 +103,15 @@ var headlessDatepicker = function (options) {
         return weekDays
     }
 
-    var getMonth = function (range, monthOffset) {
+    var getMonthNames = function (range) {
         var firstDayOfMonth = range.find(function (item) {
             return item && item.isAdjacent == false
         })
 
-        var momentMonth = firstDayOfMonth.moment.subtract(monthOffset, 'month')
-
         return {
-            full: momentMonth.format('MMMM'),
-            short: momentMonth.format('MMM')
+            number: firstDayOfMonth.moment.month(),
+            full: firstDayOfMonth.moment.format('MMMM'),
+            short: firstDayOfMonth.moment.format('MMM')
         }
     }
 
@@ -155,9 +154,17 @@ var headlessDatepicker = function (options) {
 
         var startWeekNumber = range[0].moment.week()
         var endWeekNumber = range[range.length - 1].moment.week()
+        var newYear = false
+
+        if(startWeekNumber > endWeekNumber) {
+            endWeekNumber = range[range.length - 2].moment.week() + 1
+            newYear = true
+        }
 
         for (var i = startWeekNumber; i <= endWeekNumber; i++) {
-            weeks.push(range.filter(function (r) { return r.moment.week() == i }))
+            var compareWeek = newYear && i == endWeekNumber ? 1 : i
+
+            weeks.push(range.filter(function (r) { return r.moment.week() == compareWeek }))
         }
 
         return weeks
@@ -238,9 +245,9 @@ var headlessDatepicker = function (options) {
 
     hdp.getCalendar = function (year, month, mode, oneBasedMonth) {
         mode = mode || 'exact'
-
-        var startDate = hdMoment().year(year).month(month).date(1).toDate()
-        var endDate = hdMoment().year(year).month(month).add(1, 'months').date(0).toDate()
+        var monthOffset = oneBasedMonth ? 1 : 0
+        var startDate = hdMoment().year(year).month(month - monthOffset).date(1).toDate()
+        var endDate = hdMoment().year(year).month(month - monthOffset).add(1, 'months').date(0).toDate()
 
         var range = hdp.getRange(startDate, endDate)
 
@@ -249,9 +256,9 @@ var headlessDatepicker = function (options) {
         var weeks = getWeeks(range, mode)
 
         var calendar = {
-            moment: hdMoment,
             weekDays: weekDays,
-            month: getMonth(range, oneBasedMonth ? 1 : 0),
+            year: year,
+            month: getMonthNames(range),
             weeks: weeks
         }
 
@@ -260,6 +267,7 @@ var headlessDatepicker = function (options) {
 
     hdp.getCalendars = function (months, mode, oneBasedMonth) {
         var t = this
+
         return months.map(function (item) { return t.getCalendar(item.year, item.month, mode, oneBasedMonth) })
     }
 
