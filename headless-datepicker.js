@@ -103,13 +103,13 @@ var headlessDatepicker = function (options) {
         return weekDays
     }
 
-    var getMonthNames = function (range) {
+    var getMonthNames = function (range, monthOffset) {
         var firstDayOfMonth = range.find(function (item) {
             return item && item.isAdjacent == false
         })
 
         return {
-            number: firstDayOfMonth.moment.month(),
+            number: firstDayOfMonth.moment.month() + monthOffset,
             full: firstDayOfMonth.moment.format('MMMM'),
             short: firstDayOfMonth.moment.format('MMM')
         }
@@ -258,7 +258,7 @@ var headlessDatepicker = function (options) {
         var calendar = {
             weekDays: weekDays,
             year: year,
-            month: getMonthNames(range),
+            month: getMonthNames(range, monthOffset),
             weeks: weeks
         }
 
