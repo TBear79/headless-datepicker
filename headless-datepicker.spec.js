@@ -62,7 +62,7 @@ describe('Headless datepicker', () => {
 			var selectedDate = sut.getSelectedDate()
 
 			expect(selectedDate).not.to.be.null
-			expect(selectedDate.moment.toDate()).to.deep.equal(testDate)
+			expect(selectedDate.day.toDate()).to.deep.equal(testDate)
 		})
 
 		it('should get array of selected dates after setting multiple dates', () => {
@@ -73,7 +73,7 @@ describe('Headless datepicker', () => {
 			expect(selectedDates).not.to.be.null
 			expect(selectedDates).to.be.an('array')
 			expect(selectedDates.length).to.equal(3)
-			expect(selectedDates.map((s) => { return s.moment.toDate() })).to.deep.equal(testDates)
+			expect(selectedDates.map((s) => { return s.day.toDate() })).to.deep.equal(testDates)
 		})
 
 		it('should return latest selected date in getDate after setting multiple dates', () => {
@@ -83,7 +83,7 @@ describe('Headless datepicker', () => {
 			var selectedDate = sut.getSelectedDate()
 
 			expect(selectedDate).not.to.be.null
-			expect(selectedDate.moment.toDate()).to.deep.equal(lastDate)
+			expect(selectedDate.day.toDate()).to.deep.equal(lastDate)
 		})
 	})
 
@@ -102,8 +102,8 @@ describe('Headless datepicker', () => {
 
 			expect(dates).to.be.an('array')
 			expect(dates.length).to.equal(61)
-			expect(dates[0].moment.toDate()).to.deep.equal(startDate)
-			expect(dates[60].moment.toDate()).to.deep.equal(endDate)
+			expect(dates[0].day.toDate()).to.deep.equal(startDate)
+			expect(dates[60].day.toDate()).to.deep.equal(endDate)
 		})
 
 		describe('Selected dates', () => {
@@ -184,9 +184,9 @@ describe('Headless datepicker', () => {
 
 			var dates = sut.getRange(startDate, endDate)
 
-			expect(dates[4].moment.toDate()).to.deep.equal(disabledDates[0])
-			expect(dates[24].moment.toDate()).to.deep.equal(disabledDates[1])
-			expect(dates[45].moment.toDate()).to.deep.equal(disabledDates[2])
+			expect(dates[4].day.toDate()).to.deep.equal(disabledDates[0])
+			expect(dates[24].day.toDate()).to.deep.equal(disabledDates[1])
+			expect(dates[45].day.toDate()).to.deep.equal(disabledDates[2])
 
 			dates.forEach((item, i) => {
 				if (i == 4 || i == 24 || i == 45) {
@@ -249,7 +249,7 @@ describe('Headless datepicker', () => {
 
 			it('should respect zero based months', () => {
 				expect(calendar.month.number).to.equal(3)
-				expect(calendar.weeks[0][0].moment.format('MMMM')).to.equal('April')
+				expect(calendar.weeks[0][0].day.format('MMMM')).to.equal('April')
 				expect(calendar.month.full).to.equal('April')
 				expect(calendar.month.short).to.equal('Apr')
 			})
@@ -258,7 +258,7 @@ describe('Headless datepicker', () => {
 				calendar = sut.getCalendar(year, month, 'exact', true)
 
 				expect(calendar.month.number).to.equal(3)
-				expect(calendar.weeks[0][0].moment.format('MMMM')).to.equal('March')
+				expect(calendar.weeks[0][0].day.format('MMMM')).to.equal('March')
 				expect(calendar.month.full).to.equal('March')
 				expect(calendar.month.short).to.equal('Mar')
 			})
@@ -299,16 +299,16 @@ describe('Headless datepicker', () => {
 			})
 
 			it('should show previous adjacent month', () => {
-				var days = calendar.weeks[0].slice(0, 6).map(week => week.moment.format('YYYY-MM-DD'))
+				var days = calendar.weeks[0].slice(0, 6).map(week => week.day.format('YYYY-MM-DD'))
 
-				expect(calendar.weeks[0][6].moment.format('YYYY-MM-DD')).to.equal('2017-04-01')
+				expect(calendar.weeks[0][6].day.format('YYYY-MM-DD')).to.equal('2017-04-01')
 				expect(days).to.deep.equal(['2017-03-26', '2017-03-27', '2017-03-28', '2017-03-29', '2017-03-30', '2017-03-31'])
 			})
 
 			it('should show next adjacent month', () => {
-				var days = calendar.weeks[5].slice(1).map(week => week.moment.format('YYYY-MM-DD'))
+				var days = calendar.weeks[5].slice(1).map(week => week.day.format('YYYY-MM-DD'))
 
-				expect(calendar.weeks[5][0].moment.format('YYYY-MM-DD')).to.equal('2017-04-30')
+				expect(calendar.weeks[5][0].day.format('YYYY-MM-DD')).to.equal('2017-04-30')
 				expect(days).to.deep.equal(['2017-05-01', '2017-05-02', '2017-05-03', '2017-05-04', '2017-05-05', '2017-05-06'])
 			})
 		})
@@ -316,12 +316,12 @@ describe('Headless datepicker', () => {
 		describe('"fixed"-mode', function () {
 			it('should show 6 weeks for month with 5 weeks', () => {
 				calendar = sut.getCalendar(year, 2, 'fixed')
-				expect(calendar.weeks.slice(-1)[0].map(item => item.moment.format('YYYY-MM-DD'))).to.deep.equal(['2017-04-02', '2017-04-03', '2017-04-04', '2017-04-05', '2017-04-06', '2017-04-07', '2017-04-08'])
+				expect(calendar.weeks.slice(-1)[0].map(item => item.day.format('YYYY-MM-DD'))).to.deep.equal(['2017-04-02', '2017-04-03', '2017-04-04', '2017-04-05', '2017-04-06', '2017-04-07', '2017-04-08'])
 			})
 
 			it('should show 6 weeks for month with 6 weeks', () => {
 				calendar = sut.getCalendar(year, month, 'fixed')
-				expect(calendar.weeks.slice(-1)[0].map(item => item.moment.format('YYYY-MM-DD'))).to.deep.equal(['2017-04-30', '2017-05-01', '2017-05-02', '2017-05-03', '2017-05-04', '2017-05-05', '2017-05-06'])
+				expect(calendar.weeks.slice(-1)[0].map(item => item.day.format('YYYY-MM-DD'))).to.deep.equal(['2017-04-30', '2017-05-01', '2017-05-02', '2017-05-03', '2017-05-04', '2017-05-05', '2017-05-06'])
 			})
 		})
 	})
@@ -383,13 +383,13 @@ describe('Headless datepicker', () => {
 
 
 			dates = sut.getRange(new Date(), new Date())
-			expect(dates[0].moment.fromNow()).to.equal('a few seconds ago')
+			expect(dates[0].day.fromNow()).to.equal('a few seconds ago')
 
 
 			sut = new HeadlessDatepicker({ locale: 'da', localeSettings: da })
 
 			dates = sut.getRange(new Date(), new Date())
-			expect(dates[0].moment.fromNow()).to.equal('få sekunder siden')
+			expect(dates[0].day.fromNow()).to.equal('få sekunder siden')
 		})
 
 		it('should respect first day in week, based on locale', () => {
@@ -398,18 +398,18 @@ describe('Headless datepicker', () => {
 
 			dates = sut.getRange(new Date(2017, 3, 1), new Date(2017, 3, 3))
 			calendar = sut.getCalendar(2017, 3)
-			expect(dates[0].moment.weekday()).to.equal(6)
-			expect(dates[1].moment.weekday()).to.equal(0)
-			expect(dates[2].moment.weekday()).to.equal(1)
+			expect(dates[0].day.weekday()).to.equal(6)
+			expect(dates[1].day.weekday()).to.equal(0)
+			expect(dates[2].day.weekday()).to.equal(1)
 			expect(calendar.weekDays.min).to.deep.equal(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'])
 
 			sut = new HeadlessDatepicker({ locale: 'da', localeSettings: da })
 
 			dates = sut.getRange(new Date(2017, 3, 1), new Date(2017, 3, 3))
 			calendar = sut.getCalendar(2017, 3)
-			expect(dates[0].moment.weekday()).to.equal(5)
-			expect(dates[1].moment.weekday()).to.equal(6)
-			expect(dates[2].moment.weekday()).to.equal(0)
+			expect(dates[0].day.weekday()).to.equal(5)
+			expect(dates[1].day.weekday()).to.equal(6)
+			expect(dates[2].day.weekday()).to.equal(0)
 			expect(calendar.weekDays.min).to.deep.equal(['ma', 'ti', 'on', 'to', 'fr', 'lø', 'sø'])
 		})
 	})

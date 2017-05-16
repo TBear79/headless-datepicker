@@ -26,7 +26,7 @@ var headlessDatepicker = function (options) {
     var isSelectedCheck = function (date) {
         var selected = hdp.getSelectedDates()
 
-        var found = selected.find(function (item) { return hdMoment(item.moment.toDate()).isSame(date, 'day') })
+        var found = selected.find(function (item) { return hdMoment(item.day.toDate()).isSame(date, 'day') })
 
         return typeof found !== 'undefined'
     }
@@ -60,7 +60,7 @@ var headlessDatepicker = function (options) {
         var isActive = !isMinimum && !isMaximum && !isDisabled
 
         return {
-            moment: momentDate,
+            day: momentDate,
             isActive: isActive,
             isSelected: isSelectedCheck(date),
             isMinimumDate: isMinimum,
@@ -89,11 +89,11 @@ var headlessDatepicker = function (options) {
         }
 
         var firstDayOfWeekIndex = range.findIndex(function (item) {
-            return item.moment.weekday() == 0
+            return item.day.weekday() == 0
         })
 
         for (var i = firstDayOfWeekIndex; i < firstDayOfWeekIndex + 7; i++) {
-            var day = range[i].moment
+            var day = range[i].day
 
             weekDays.full.push(day.format('dddd'))
             weekDays.short.push(day.format('ddd'))
@@ -109,9 +109,9 @@ var headlessDatepicker = function (options) {
         })
 
         return {
-            number: firstDayOfMonth.moment.month() + monthOffset,
-            full: firstDayOfMonth.moment.format('MMMM'),
-            short: firstDayOfMonth.moment.format('MMM')
+            number: firstDayOfMonth.day.month() + monthOffset,
+            full: firstDayOfMonth.day.format('MMMM'),
+            short: firstDayOfMonth.day.format('MMM')
         }
     }
 
@@ -152,19 +152,19 @@ var headlessDatepicker = function (options) {
     var splitIntoWeeks = function (range) {
         var weeks = []
 
-        var startWeekNumber = range[0].moment.week()
-        var endWeekNumber = range[range.length - 1].moment.week()
+        var startWeekNumber = range[0].day.week()
+        var endWeekNumber = range[range.length - 1].day.week()
         var newYear = false
 
         if(startWeekNumber > endWeekNumber) {
-            endWeekNumber = range[range.length - 2].moment.week() + 1
+            endWeekNumber = range[range.length - 2].day.week() + 1
             newYear = true
         }
 
         for (var i = startWeekNumber; i <= endWeekNumber; i++) {
             var compareWeek = newYear && i == endWeekNumber ? 1 : i
 
-            weeks.push(range.filter(function (r) { return r.moment.week() == compareWeek }))
+            weeks.push(range.filter(function (r) { return r.day.week() == compareWeek }))
         }
 
         return weeks
@@ -178,9 +178,9 @@ var headlessDatepicker = function (options) {
         var weeks = splitIntoWeeks(range)
         var lastWeekIndex = weeks.length - 1
 
-        weeks[0] = getAdjacentBefore(range[0].moment, showAdjacentMonths).concat(weeks[0])
+        weeks[0] = getAdjacentBefore(range[0].day, showAdjacentMonths).concat(weeks[0])
 
-        weeks[lastWeekIndex] = weeks[lastWeekIndex].concat(getAdjacentAfter(range[range.length - 1].moment, showAdjacentMonths))
+        weeks[lastWeekIndex] = weeks[lastWeekIndex].concat(getAdjacentAfter(range[range.length - 1].day, showAdjacentMonths))
 
         return weeks
     }
@@ -192,7 +192,7 @@ var headlessDatepicker = function (options) {
     var fixedMode = function (range) {
         var weeks = adjacentMode(range)
         while (weeks.length < 6) {
-            var lastDay = weeks[weeks.length - 1].slice(-1)[0].moment.clone()
+            var lastDay = weeks[weeks.length - 1].slice(-1)[0].day.clone()
             var nextDay = lastDay.add(1, 'day')
             var newWeek = getAdjacentAfter(nextDay, true)
             
@@ -235,9 +235,9 @@ var headlessDatepicker = function (options) {
         var dates = []
         var dateWorker = createHdpDate(startDate, false)
 
-        while (dateWorker.moment.isSameOrBefore(endDate)) {
+        while (dateWorker.day.isSameOrBefore(endDate)) {
             dates.push(dateWorker)
-            dateWorker = createHdpDate(addDay(dateWorker.moment.toDate()), false)
+            dateWorker = createHdpDate(addDay(dateWorker.day.toDate()), false)
         }
 
         return dates
