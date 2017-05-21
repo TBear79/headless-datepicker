@@ -2,7 +2,7 @@ import { expect, assert } from 'chai'
 import { HeadlessDatepicker } from './headless-datepicker'
 
 describe('Headless datepicker', () => {
-	var sut;
+	let sut;
 
 	beforeEach(() => {
 		sut = new HeadlessDatepicker()
@@ -14,32 +14,32 @@ describe('Headless datepicker', () => {
 		})
 
 		it('should have default options set', () => {
-			expect(sut.minimumDate).to.be.null
-			expect(sut.maximumDate).to.be.null
-			expect(sut.disabledDates).to.be.an('array')
+			expect(sut.options.locale).to.equal('en')
+			expect(sut.options.disabledDates).to.be.an('array')
+			expect(sut.options.extras).to.be.an('array')
 		})
 
 		it('should override default options by setting options in contructor', () => {
-			var dateFormat = 'DD/MM/YYYY'
-			var minimumDate = new Date(2017, 1, 10)
-			var maximumDate = new Date(2017, 1, 20)
-			var disabledDates = [new Date(2017, 1, 14), new Date(2017, 1, 15)]
+			const dateFormat = 'DD/MM/YYYY'
+			const minimumDate = new Date(2017, 1, 10)
+			const maximumDate = new Date(2017, 1, 20)
+			const disabledDates = [new Date(2017, 1, 14), new Date(2017, 1, 15)]
 			sut = new HeadlessDatepicker({
 				minimumDate: minimumDate,
 				maximumDate: maximumDate,
 				disabledDates: disabledDates
 			})
 
-			expect(sut.minimumDate).to.deep.equal(minimumDate)
-			expect(sut.maximumDate).to.deep.equal(maximumDate)
-			expect(sut.disabledDates).to.deep.equal(disabledDates)
+			expect(sut.options.minimumDate).to.deep.equal(minimumDate)
+			expect(sut.options.maximumDate).to.deep.equal(maximumDate)
+			expect(sut.options.disabledDates).to.deep.equal(disabledDates)
 		})
 
 		it('should support multiple objects', () => {
-			var date1 = new Date(2017, 3, 1)
-			var date2 = new Date(2017, 4, 1)
+			const date1 = new Date(2017, 3, 1)
+			const date2 = new Date(2017, 4, 1)
 			sut = new HeadlessDatepicker({ minimumDate: date1 })
-			var sut2 = new HeadlessDatepicker({ minimumDate: date2 })
+			const sut2 = new HeadlessDatepicker({ minimumDate: date2 })
 
 			expect(sut.options.minimumDate).to.deep.equal(date1)
 			expect(sut2.options.minimumDate).to.deep.equal(date2)
@@ -47,41 +47,22 @@ describe('Headless datepicker', () => {
 	})
 
 	describe('Setting and getting dates', () => {
-		it('should get selected date after setting a selected date', () => {
-			var testDate = new Date(2017, 5, 15)
-			sut.setSelectedDate(testDate)
-			var selectedDate = sut.getSelectedDate()
-
-			expect(selectedDate).not.to.be.null
-			expect(selectedDate.day.toDate()).to.deep.equal(testDate)
-		})
-
 		it('should get array of selected dates after setting multiple dates', () => {
-			var testDates = [new Date(2017, 5, 15), new Date(2017, 5, 16), new Date(2017, 5, 17)]
+			const testDates = [new Date(2017, 5, 15), new Date(2017, 5, 16), new Date(2017, 5, 17)]
 			sut.setSelectedDates(testDates)
-			var selectedDates = sut.getSelectedDates()
+			const selectedDates = sut.getSelectedDates()
 
 			expect(selectedDates).not.to.be.null
 			expect(selectedDates).to.be.an('array')
 			expect(selectedDates.length).to.equal(3)
 			expect(selectedDates.map((s) => { return s.day.toDate() })).to.deep.equal(testDates)
 		})
-
-		it('should return latest selected date in getDate after setting multiple dates', () => {
-			var lastDate = new Date(2017, 5, 17)
-			var testDates = [new Date(2017, 5, 15), new Date(2017, 5, 16), lastDate]
-			sut.setSelectedDates(testDates)
-			var selectedDate = sut.getSelectedDate()
-
-			expect(selectedDate).not.to.be.null
-			expect(selectedDate.day.toDate()).to.deep.equal(lastDate)
-		})
 	})
 
 	describe('Getting dates for a time span', () => {
 
-		var startDate;
-		var endDate;
+		let startDate;
+		let endDate;
 
 		beforeEach(() => {
 			startDate = new Date(2017, 2, 1)
@@ -89,7 +70,7 @@ describe('Headless datepicker', () => {
 		})
 
 		it('should have correct start and end date', () => {
-			var dates = sut.getRange(startDate, endDate)
+			const dates = sut.getRange(startDate, endDate)
 
 			expect(dates).to.be.an('array')
 			expect(dates.length).to.equal(61)
@@ -99,10 +80,10 @@ describe('Headless datepicker', () => {
 
 		describe('Selected dates', () => {
 			it('should have selected dates marked', () => {
-				var testDates = [new Date(2017, 2, 2), new Date(2017, 2, 31), new Date(2017, 3, 29)]
+				const testDates = [new Date(2017, 2, 2), new Date(2017, 2, 31), new Date(2017, 3, 29)]
 				sut.setSelectedDates(testDates)
 
-				var dates = sut.getRange(startDate, endDate)
+				const dates = sut.getRange(startDate, endDate)
 
 				expect(dates[1].isSelected).to.be.true
 				expect(dates[30].isSelected).to.be.true
@@ -112,8 +93,8 @@ describe('Headless datepicker', () => {
 		})
 
 		describe('Minimum date', () => {
-			var minimumDate = new Date(2017, 2, 10)
-			var datepickerResult;
+			const minimumDate = new Date(2017, 2, 10)
+			let datepickerResult;
 
 			beforeEach(() => {
 				sut = new HeadlessDatepicker({
@@ -140,8 +121,8 @@ describe('Headless datepicker', () => {
 		})
 
 		describe('Maximum date', () => {
-			var maximumDate = new Date(2017, 2, 10)
-			var datepickerResult;
+			const maximumDate = new Date(2017, 2, 10)
+			let datepickerResult;
 
 			beforeEach(() => {
 				sut = new HeadlessDatepicker({
@@ -168,12 +149,12 @@ describe('Headless datepicker', () => {
 
 
 		it('should have disabled dates marked as inactive', () => {
-			var disabledDates = [new Date(2017, 2, 5), new Date(2017, 2, 25), new Date(2017, 3, 15)]
+			const disabledDates = [new Date(2017, 2, 5), new Date(2017, 2, 25), new Date(2017, 3, 15)]
 			sut = new HeadlessDatepicker({
 				disabledDates: disabledDates
 			})
 
-			var dates = sut.getRange(startDate, endDate)
+			const dates = sut.getRange(startDate, endDate)
 
 			expect(dates[4].day.toDate()).to.deep.equal(disabledDates[0])
 			expect(dates[24].day.toDate()).to.deep.equal(disabledDates[1])
@@ -192,9 +173,9 @@ describe('Headless datepicker', () => {
 		})
 
 		it('should return the additional information that was provided for specific dates', () => {
-			var data1 = { holiday: 'Easter' }
-			var data2 = 'The coolest thing'
-			var data3 = [1, 2, 3]
+			const data1 = { holiday: 'Easter' }
+			const data2 = 'The coolest thing'
+			const data3 = [1, 2, 3]
 
 			sut = new HeadlessDatepicker({
 				extras: [
@@ -204,7 +185,7 @@ describe('Headless datepicker', () => {
 				]
 			})
 
-			var dates = sut.getRange(startDate, endDate)
+			const dates = sut.getRange(startDate, endDate)
 
 			expect(dates[8].extras).to.be.null
 			expect(dates[9].extras).to.deep.equal(data1)
@@ -214,9 +195,9 @@ describe('Headless datepicker', () => {
 	})
 
 	describe('Getting dates in grid by months', () => {
-		var year;
-		var month;
-		var calendar;
+		let year;
+		let month;
+		let calendar;
 
 		beforeEach(() => {
 			year = 2017
@@ -233,25 +214,25 @@ describe('Headless datepicker', () => {
 			})
 
 			it('should return correct week day names in correct order', () => {
-				expect(calendar.weekDays.full).to.deep.equal(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'])
-				expect(calendar.weekDays.short).to.deep.equal(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'])
-				expect(calendar.weekDays.min).to.deep.equal(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'])
+				expect(calendar.weekDayInfo.full).to.deep.equal(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'])
+				expect(calendar.weekDayInfo.short).to.deep.equal(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'])
+				expect(calendar.weekDayInfo.min).to.deep.equal(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'])
 			})
 
 			it('should respect zero based months', () => {
-				expect(calendar.month.number).to.equal(3)
+				expect(calendar.monthInfo.number).to.equal(3)
 				expect(calendar.weeks[0][0].day.format('MMMM')).to.equal('April')
-				expect(calendar.month.full).to.equal('April')
-				expect(calendar.month.short).to.equal('Apr')
+				expect(calendar.monthInfo.full).to.equal('April')
+				expect(calendar.monthInfo.short).to.equal('Apr')
 			})
 
 			it('should respect one based months', () => {
 				calendar = sut.getMonth(year, month, 'exact', true)
 
-				expect(calendar.month.number).to.equal(3)
+				expect(calendar.monthInfo.number).to.equal(3)
 				expect(calendar.weeks[0][0].day.format('MMMM')).to.equal('March')
-				expect(calendar.month.full).to.equal('March')
-				expect(calendar.month.short).to.equal('Mar')
+				expect(calendar.monthInfo.full).to.equal('March')
+				expect(calendar.monthInfo.short).to.equal('Mar')
 			})
 
 			it('should return correct number of days for each week', function () {
@@ -276,8 +257,8 @@ describe('Headless datepicker', () => {
 			})
 
 			it('should not show adjacent months', () => {
-				var firstWeekDays = calendar.weeks[0].slice(0, 6)
-				var lastWeekDays = calendar.weeks[5].slice(1)
+				const firstWeekDays = calendar.weeks[0].slice(0, 6)
+				const lastWeekDays = calendar.weeks[5].slice(1)
 
 				expect(firstWeekDays).to.deep.equal([null, null, null, null, null, null])
 				expect(lastWeekDays).to.deep.equal([null, null, null, null, null, null])
@@ -290,14 +271,14 @@ describe('Headless datepicker', () => {
 			})
 
 			it('should show previous adjacent month', () => {
-				var days = calendar.weeks[0].slice(0, 6).map(week => week.day.format('YYYY-MM-DD'))
+				const days = calendar.weeks[0].slice(0, 6).map(week => week.day.format('YYYY-MM-DD'))
 
 				expect(calendar.weeks[0][6].day.format('YYYY-MM-DD')).to.equal('2017-04-01')
 				expect(days).to.deep.equal(['2017-03-26', '2017-03-27', '2017-03-28', '2017-03-29', '2017-03-30', '2017-03-31'])
 			})
 
 			it('should show next adjacent month', () => {
-				var days = calendar.weeks[5].slice(1).map(week => week.day.format('YYYY-MM-DD'))
+				const days = calendar.weeks[5].slice(1).map(week => week.day.format('YYYY-MM-DD'))
 
 				expect(calendar.weeks[5][0].day.format('YYYY-MM-DD')).to.equal('2017-04-30')
 				expect(days).to.deep.equal(['2017-05-01', '2017-05-02', '2017-05-03', '2017-05-04', '2017-05-05', '2017-05-06'])
@@ -318,8 +299,8 @@ describe('Headless datepicker', () => {
 	})
 
 	describe('Multiple grids', () => {
-		var months;
-		var calendars;
+		let months;
+		let calendars;
 
 		beforeEach(() => {
 			months = [{ year: 2017, month: 1 }, { year: 2017, month: 2 }, { year: 2017, month: 3 }, { year: 2018, month: 3 }]
@@ -370,7 +351,7 @@ describe('Headless datepicker', () => {
 
 	describe('Localization', () => {
 		it('should be able to set locale for moment', () => {
-			var dates;
+			let dates;
 
 
 			dates = sut.getRange(new Date(), new Date())
@@ -384,15 +365,15 @@ describe('Headless datepicker', () => {
 		})
 
 		it('should respect first day in week, based on locale', () => {
-			var dates;
-			var calendar;
+			let dates;
+			let calendar;
 
 			dates = sut.getRange(new Date(2017, 3, 1), new Date(2017, 3, 3))
 			calendar = sut.getMonth(2017, 3)
 			expect(dates[0].day.weekday()).to.equal(6)
 			expect(dates[1].day.weekday()).to.equal(0)
 			expect(dates[2].day.weekday()).to.equal(1)
-			expect(calendar.weekDays.min).to.deep.equal(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'])
+			expect(calendar.weekDayInfo.min).to.deep.equal(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'])
 
 			sut = new HeadlessDatepicker({ locale: 'da', localeSettings: da })
 
@@ -401,13 +382,13 @@ describe('Headless datepicker', () => {
 			expect(dates[0].day.weekday()).to.equal(5)
 			expect(dates[1].day.weekday()).to.equal(6)
 			expect(dates[2].day.weekday()).to.equal(0)
-			expect(calendar.weekDays.min).to.deep.equal(['ma', 'ti', 'on', 'to', 'fr', 'lø', 'sø'])
+			expect(calendar.weekDayInfo.min).to.deep.equal(['ma', 'ti', 'on', 'to', 'fr', 'lø', 'sø'])
 		})
 	})
 })
 
 
-var da = {
+let da = {
 	months: "januar_februar_marts_april_maj_juni_juli_august_september_oktober_november_december".split("_"),
 	monthsShort: "jan_feb_mar_apr_maj_jun_jul_aug_sep_okt_nov_dec".split("_"),
 	weekdays: "søndag_mandag_tirsdag_onsdag_torsdag_fredag_lørdag".split("_"),

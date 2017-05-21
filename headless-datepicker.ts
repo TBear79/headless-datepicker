@@ -1,7 +1,7 @@
 import * as moment from 'moment'
 
 export class HeadlessDatepicker {
-    private selectedDates: HdpDate[]
+    private selectedDates: HdpDate[] = []
     private localMoment: any
 
     constructor(
@@ -277,7 +277,7 @@ export interface HdpOptions {
     minimumDate?: Date
     maximumDate?: Date
     disabledDates?: Date[]
-    extras?: any[]
+    extras?: ExtraInfo[]
 }
 
 export interface HdpDate {
@@ -313,6 +313,11 @@ export interface HdpMonthInfo {
 export interface HdpYearMonthPair {
     year: number
     month: number
+}
+
+export interface ExtraInfo {
+    date: Date,
+    data: any
 }
 
 export type HdpCalendarMode = 'exact' | 'adjacent' | 'fill' | 'fixed'
