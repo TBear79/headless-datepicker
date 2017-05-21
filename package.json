@@ -4,8 +4,8 @@
   "description": "Provides the logic for a datepicker. Apply your own UI on top.",
   "main": "headless-datepicker.js",
   "scripts": {
-    "test": "mocha headless-datepicker.spec.js",
-    "test:watch": "mocha headless-datepicker.spec.js -w"
+    "test": "mocha dist/headless-datepicker.spec.js",
+    "test:watch": "mocha dist/headless-datepicker.spec.js -w"
   },
   "keywords": [
     "headless",
