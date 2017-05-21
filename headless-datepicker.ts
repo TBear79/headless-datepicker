@@ -33,8 +33,7 @@ export class HeadlessDatepicker {
         return dates
     }
 
-    public getMonth(year: number, month: number, mode: HdpCalendarMode, oneBasedMonth: boolean): HdpMonth {
-        mode = mode || 'exact'
+    public getMonth(year: number, month: number, mode: HdpCalendarMode = 'fill', oneBasedMonth: boolean = false): HdpMonth {
         const monthOffset = oneBasedMonth ? 1 : 0
         const startDate = this.hdMoment().year(year).month(month - monthOffset).date(1).toDate()
         const endDate = this.hdMoment().year(year).month(month - monthOffset).add(1, 'months').date(0).toDate()
@@ -273,7 +272,7 @@ export class HeadlessDatepicker {
 
 export interface HdpOptions {
     locale?: string
-    localeSettings?: any
+    localeSettings?: any 
     minimumDate?: Date
     maximumDate?: Date
     disabledDates?: Date[]

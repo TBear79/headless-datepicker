@@ -1,0 +1,22 @@
+<h1>
+  Headless datepicker example
+</h1>
+
+<input type="text" value="{{selectedDate}}" />
+
+<table class="dp1">
+  <tr>
+    <th colspan="10">
+      <table class="header-table">
+        <tr>
+          <td class="prev"><a class="link" (click)="previousMonth(model.year, model.monthInfo.number)">Previous</a></td>
+          <td>{{model.monthInfo.full}} {{model.year}}</td>
+          <td class="next"><a class="link" (click)="nextMonth(model.year, model.monthInfo.number)">Next</a></td>
+        </tr>
+      </table>
+    </th>
+  </tr>
+  <tr *ngFor="let days of model.weeks">
+    <td *ngFor="let day of days"><a *ngIf="day !== null" class="link" (click)="selectDate(day.day.format('YYYY-MM-DD'))">{{day.day.format('DD')}}</a></td>
+  </tr>
+</table>

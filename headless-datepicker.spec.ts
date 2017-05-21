@@ -1,6 +1,8 @@
 import { expect, assert } from 'chai'
 import { HeadlessDatepicker } from './headless-datepicker'
 
+// TODO: December 2018
+
 describe('Headless datepicker', () => {
 	let sut;
 

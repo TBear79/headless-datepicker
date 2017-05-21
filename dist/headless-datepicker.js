@@ -25,8 +25,7 @@ class HeadlessDatepicker {
         }
         return dates;
     }
-    getMonth(year, month, mode, oneBasedMonth) {
-        mode = mode || 'exact';
+    getMonth(year, month, mode = 'exact', oneBasedMonth = false) {
         const monthOffset = oneBasedMonth ? 1 : 0;
         const startDate = this.hdMoment().year(year).month(month - monthOffset).date(1).toDate();
         const endDate = this.hdMoment().year(year).month(month - monthOffset).add(1, 'months').date(0).toDate();

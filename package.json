@@ -2,7 +2,7 @@
   "name": "headless-datepicker",
   "version": "1.0.0",
   "description": "Provides the logic for a datepicker. Apply your own UI on top.",
-  "main": "headless-datepicker.js",
+  "main": "dist/headless-datepicker.js",
   "scripts": {
     "test": "mocha dist/headless-datepicker.spec.js",
     "test:watch": "mocha dist/headless-datepicker.spec.js -w"
