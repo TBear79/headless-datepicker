@@ -2,10 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const chai_1 = require("chai");
 const headless_datepicker_1 = require("./headless-datepicker");
+// TODO: December 2018 bug
+// TODO: Rename private methods
+// TODO: Rename day to moment in HdpDate
+// TODO: Move interfaces into module (See definition file for moment)
 describe('Headless datepicker', () => {
     let sut;
     beforeEach(() => {
-        sut = new headless_datepicker_1.HeadlessDatepicker();
+        sut = new headless_datepicker_1.HeadlessDatepicker.Calendar();
     });
     describe('Initialization', () => {
         it('should be initialized', () => {
@@ -21,7 +25,7 @@ describe('Headless datepicker', () => {
             const minimumDate = new Date(2017, 1, 10);
             const maximumDate = new Date(2017, 1, 20);
             const disabledDates = [new Date(2017, 1, 14), new Date(2017, 1, 15)];
-            sut = new headless_datepicker_1.HeadlessDatepicker({
+            sut = new headless_datepicker_1.HeadlessDatepicker.Calendar({
                 minimumDate: minimumDate,
                 maximumDate: maximumDate,
                 disabledDates: disabledDates
@@ -33,8 +37,8 @@ describe('Headless datepicker', () => {
         it('should support multiple objects', () => {
             const date1 = new Date(2017, 3, 1);
             const date2 = new Date(2017, 4, 1);
-            sut = new headless_datepicker_1.HeadlessDatepicker({ minimumDate: date1 });
-            const sut2 = new headless_datepicker_1.HeadlessDatepicker({ minimumDate: date2 });
+            sut = new headless_datepicker_1.HeadlessDatepicker.Calendar({ minimumDate: date1 });
+            const sut2 = new headless_datepicker_1.HeadlessDatepicker.Calendar({ minimumDate: date2 });
             chai_1.expect(sut.options.minimumDate).to.deep.equal(date1);
             chai_1.expect(sut2.options.minimumDate).to.deep.equal(date2);
         });
@@ -79,7 +83,7 @@ describe('Headless datepicker', () => {
             const minimumDate = new Date(2017, 2, 10);
             let datepickerResult;
             beforeEach(() => {
-                sut = new headless_datepicker_1.HeadlessDatepicker({
+                sut = new headless_datepicker_1.HeadlessDatepicker.Calendar({
                     minimumDate: minimumDate
                 });
                 datepickerResult = sut.getRange(startDate, endDate);
@@ -101,7 +105,7 @@ describe('Headless datepicker', () => {
             const maximumDate = new Date(2017, 2, 10);
             let datepickerResult;
             beforeEach(() => {
-                sut = new headless_datepicker_1.HeadlessDatepicker({
+                sut = new headless_datepicker_1.HeadlessDatepicker.Calendar({
                     maximumDate: maximumDate
                 });
                 datepickerResult = sut.getRange(startDate, endDate);
@@ -121,7 +125,7 @@ describe('Headless datepicker', () => {
         });
         it('should have disabled dates marked as inactive', () => {
             const disabledDates = [new Date(2017, 2, 5), new Date(2017, 2, 25), new Date(2017, 3, 15)];
-            sut = new headless_datepicker_1.HeadlessDatepicker({
+            sut = new headless_datepicker_1.HeadlessDatepicker.Calendar({
                 disabledDates: disabledDates
             });
             const dates = sut.getRange(startDate, endDate);
@@ -142,7 +146,7 @@ describe('Headless datepicker', () => {
             const data1 = { holiday: 'Easter' };
             const data2 = 'The coolest thing';
             const data3 = [1, 2, 3];
-            sut = new headless_datepicker_1.HeadlessDatepicker({
+            sut = new headless_datepicker_1.HeadlessDatepicker.Calendar({
                 extras: [
                     { date: new Date(2017, 2, 10), data: data1 },
                     { date: new Date(2017, 2, 20), data: data2 },
@@ -288,7 +292,7 @@ describe('Headless datepicker', () => {
             let dates;
             dates = sut.getRange(new Date(), new Date());
             chai_1.expect(dates[0].day.fromNow()).to.equal('a few seconds ago');
-            sut = new headless_datepicker_1.HeadlessDatepicker({ locale: 'da', localeSettings: da });
+            sut = new headless_datepicker_1.HeadlessDatepicker.Calendar({ locale: 'da', localeSettings: da });
             dates = sut.getRange(new Date(), new Date());
             chai_1.expect(dates[0].day.fromNow()).to.equal('få sekunder siden');
         });
@@ -301,7 +305,7 @@ describe('Headless datepicker', () => {
             chai_1.expect(dates[1].day.weekday()).to.equal(0);
             chai_1.expect(dates[2].day.weekday()).to.equal(1);
             chai_1.expect(calendar.weekDayInfo.min).to.deep.equal(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']);
-            sut = new headless_datepicker_1.HeadlessDatepicker({ locale: 'da', localeSettings: da });
+            sut = new headless_datepicker_1.HeadlessDatepicker.Calendar({ locale: 'da', localeSettings: da });
             dates = sut.getRange(new Date(2017, 3, 1), new Date(2017, 3, 3));
             calendar = sut.getMonth(2017, 3);
             chai_1.expect(dates[0].day.weekday()).to.equal(5);

@@ -1,13 +1,19 @@
 import { expect, assert } from 'chai'
 import { HeadlessDatepicker } from './headless-datepicker'
 
-// TODO: December 2018
+// TODO: December 2018 bug
+
+// TODO: Rename private methods
+
+// TODO: Rename day to moment in HdpDate
+
+// TODO: Move interfaces into module (See definition file for moment)
 
 describe('Headless datepicker', () => {
 	let sut;
 
 	beforeEach(() => {
-		sut = new HeadlessDatepicker()
+		sut = new HeadlessDatepicker.Calendar()
 	})
 
 	describe('Initialization', () => {
@@ -26,7 +32,7 @@ describe('Headless datepicker', () => {
 			const minimumDate = new Date(2017, 1, 10)
 			const maximumDate = new Date(2017, 1, 20)
 			const disabledDates = [new Date(2017, 1, 14), new Date(2017, 1, 15)]
-			sut = new HeadlessDatepicker({
+			sut = new HeadlessDatepicker.Calendar({
 				minimumDate: minimumDate,
 				maximumDate: maximumDate,
 				disabledDates: disabledDates
@@ -40,8 +46,8 @@ describe('Headless datepicker', () => {
 		it('should support multiple objects', () => {
 			const date1 = new Date(2017, 3, 1)
 			const date2 = new Date(2017, 4, 1)
-			sut = new HeadlessDatepicker({ minimumDate: date1 })
-			const sut2 = new HeadlessDatepicker({ minimumDate: date2 })
+			sut = new HeadlessDatepicker.Calendar({ minimumDate: date1 })
+			const sut2 = new HeadlessDatepicker.Calendar({ minimumDate: date2 })
 
 			expect(sut.options.minimumDate).to.deep.equal(date1)
 			expect(sut2.options.minimumDate).to.deep.equal(date2)
@@ -99,7 +105,7 @@ describe('Headless datepicker', () => {
 			let datepickerResult;
 
 			beforeEach(() => {
-				sut = new HeadlessDatepicker({
+				sut = new HeadlessDatepicker.Calendar({
 					minimumDate: minimumDate
 				})
 
@@ -127,7 +133,7 @@ describe('Headless datepicker', () => {
 			let datepickerResult;
 
 			beforeEach(() => {
-				sut = new HeadlessDatepicker({
+				sut = new HeadlessDatepicker.Calendar({
 					maximumDate: maximumDate
 				})
 
@@ -152,7 +158,7 @@ describe('Headless datepicker', () => {
 
 		it('should have disabled dates marked as inactive', () => {
 			const disabledDates = [new Date(2017, 2, 5), new Date(2017, 2, 25), new Date(2017, 3, 15)]
-			sut = new HeadlessDatepicker({
+			sut = new HeadlessDatepicker.Calendar({
 				disabledDates: disabledDates
 			})
 
@@ -179,7 +185,7 @@ describe('Headless datepicker', () => {
 			const data2 = 'The coolest thing'
 			const data3 = [1, 2, 3]
 
-			sut = new HeadlessDatepicker({
+			sut = new HeadlessDatepicker.Calendar({
 				extras: [
 					{ date: new Date(2017, 2, 10), data: data1 },
 					{ date: new Date(2017, 2, 20), data: data2 },
@@ -360,7 +366,7 @@ describe('Headless datepicker', () => {
 			expect(dates[0].day.fromNow()).to.equal('a few seconds ago')
 
 
-			sut = new HeadlessDatepicker({ locale: 'da', localeSettings: da })
+			sut = new HeadlessDatepicker.Calendar({ locale: 'da', localeSettings: da })
 
 			dates = sut.getRange(new Date(), new Date())
 			expect(dates[0].day.fromNow()).to.equal('få sekunder siden')
@@ -377,7 +383,7 @@ describe('Headless datepicker', () => {
 			expect(dates[2].day.weekday()).to.equal(1)
 			expect(calendar.weekDayInfo.min).to.deep.equal(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'])
 
-			sut = new HeadlessDatepicker({ locale: 'da', localeSettings: da })
+			sut = new HeadlessDatepicker.Calendar({ locale: 'da', localeSettings: da })
 
 			dates = sut.getRange(new Date(2017, 3, 1), new Date(2017, 3, 3))
 			calendar = sut.getMonth(2017, 3)
