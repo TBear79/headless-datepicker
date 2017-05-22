@@ -14,10 +14,6 @@ var HeadlessDatepicker;
             if (!this.localMoment)
                 throw ('headlessDatepicker: momentjs is not available. Please do import or require(\'moment\') or reference it from a script tag.');
         }
-        setSelectedDates(dates) {
-            this.selectedDates = dates.map((date) => { return this.createHdpDate(date, false); });
-        }
-        getSelectedDates() { return this.selectedDates; }
         getRange(startDate, endDate) {
             let dates = [];
             let dateWorker = this.createHdpDate(startDate, false);
@@ -53,8 +49,7 @@ var HeadlessDatepicker;
         }
         // dateIsSelected
         isSelectedCheck(date) {
-            const selected = this.getSelectedDates();
-            const found = selected.find((item) => { return this.hdMoment(item.moment.toDate()).isSame(date, 'day'); });
+            const found = this.selectedDates.find((item) => { return this.hdMoment(item).isSame(date, 'day'); });
             return typeof found !== 'undefined';
         }
         // minimumDateIsReached

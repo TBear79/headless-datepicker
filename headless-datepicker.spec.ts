@@ -48,19 +48,6 @@ describe('Headless datepicker', () => {
 		})
 	})
 
-	describe('Setting and getting dates', () => {
-		it('should get array of selected dates after setting multiple dates', () => {
-			const testDates = [new Date(2017, 5, 15), new Date(2017, 5, 16), new Date(2017, 5, 17)]
-			sut.setSelectedDates(testDates)
-			const selectedDates = sut.getSelectedDates()
-
-			expect(selectedDates).not.to.be.null
-			expect(selectedDates).to.be.an('array')
-			expect(selectedDates.length).to.equal(3)
-			expect(selectedDates.map((s) => { return s.moment.toDate() })).to.deep.equal(testDates)
-		})
-	})
-
 	describe('Getting dates for a time span', () => {
 
 		let startDate;
@@ -83,7 +70,7 @@ describe('Headless datepicker', () => {
 		describe('Selected dates', () => {
 			it('should have selected dates marked', () => {
 				const testDates = [new Date(2017, 2, 2), new Date(2017, 2, 31), new Date(2017, 3, 29)]
-				sut.setSelectedDates(testDates)
+				sut.selectedDates = testDates
 
 				const dates = sut.getRange(startDate, endDate)
 
