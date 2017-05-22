@@ -21,9 +21,9 @@ var HeadlessDatepicker;
         getRange(startDate, endDate) {
             let dates = [];
             let dateWorker = this.createHdpDate(startDate, false);
-            while (dateWorker.day.isSameOrBefore(endDate)) {
+            while (dateWorker.moment.isSameOrBefore(endDate)) {
                 dates.push(dateWorker);
-                dateWorker = this.createHdpDate(this.addDay(dateWorker.day.toDate()), false);
+                dateWorker = this.createHdpDate(this.addDay(dateWorker.moment.toDate()), false);
             }
             return dates;
         }
@@ -54,7 +54,7 @@ var HeadlessDatepicker;
         // dateIsSelected
         isSelectedCheck(date) {
             const selected = this.getSelectedDates();
-            const found = selected.find((item) => { return this.hdMoment(item.day.toDate()).isSame(date, 'day'); });
+            const found = selected.find((item) => { return this.hdMoment(item.moment.toDate()).isSame(date, 'day'); });
             return typeof found !== 'undefined';
         }
         // minimumDateIsReached
@@ -83,7 +83,7 @@ var HeadlessDatepicker;
             const isDisabled = this.isDisabledCheck(date);
             const isActive = !isMinimum && !isMaximum && !isDisabled;
             return {
-                day: momentDate,
+                moment: momentDate,
                 isActive: isActive,
                 isSelected: this.isSelectedCheck(date),
                 isMinimumDate: isMinimum,
@@ -108,10 +108,10 @@ var HeadlessDatepicker;
                 min: []
             };
             const firstDayOfWeekIndex = range.findIndex((item) => {
-                return item.day.weekday() == 0;
+                return item.moment.weekday() == 0;
             });
             for (let i = firstDayOfWeekIndex; i < firstDayOfWeekIndex + 7; i++) {
-                const day = range[i].day;
+                const day = range[i].moment;
                 weekDays.full.push(day.format('dddd'));
                 weekDays.short.push(day.format('ddd'));
                 weekDays.min.push(day.format('dd'));
@@ -123,9 +123,9 @@ var HeadlessDatepicker;
                 return item && item.isAdjacent == false;
             });
             return {
-                number: firstDayOfMonth.day.month() + monthOffset,
-                full: firstDayOfMonth.day.format('MMMM'),
-                short: firstDayOfMonth.day.format('MMM')
+                number: firstDayOfMonth.moment.month() + monthOffset,
+                full: firstDayOfMonth.moment.format('MMMM'),
+                short: firstDayOfMonth.moment.format('MMM')
             };
         }
         getAdjacentBefore(momentDate, showAdjacentMonths) {
@@ -153,16 +153,16 @@ var HeadlessDatepicker;
         }
         splitIntoWeeks(range) {
             const weeks = [];
-            let startWeekNumber = range[0].day.week();
-            let endWeekNumber = range[range.length - 1].day.week();
+            let startWeekNumber = range[0].moment.week();
+            let endWeekNumber = range[range.length - 1].moment.week();
             let newYear = false;
             if (startWeekNumber > endWeekNumber) {
-                endWeekNumber = range[range.length - 2].day.week() + 1;
+                endWeekNumber = range[range.length - 2].moment.week() + 1;
                 newYear = true;
             }
             for (var i = startWeekNumber; i <= endWeekNumber; i++) {
                 const compareWeek = newYear && i == endWeekNumber ? 1 : i;
-                weeks.push(range.filter(function (r) { return r.day.week() == compareWeek; }));
+                weeks.push(range.filter(function (r) { return r.moment.week() == compareWeek; }));
             }
             return weeks;
         }
@@ -172,8 +172,8 @@ var HeadlessDatepicker;
         fillMode(range, showAdjacentMonths) {
             var weeks = this.splitIntoWeeks(range);
             var lastWeekIndex = weeks.length - 1;
-            weeks[0] = this.getAdjacentBefore(range[0].day, showAdjacentMonths).concat(weeks[0]);
-            weeks[lastWeekIndex] = weeks[lastWeekIndex].concat(this.getAdjacentAfter(range[range.length - 1].day, showAdjacentMonths));
+            weeks[0] = this.getAdjacentBefore(range[0].moment, showAdjacentMonths).concat(weeks[0]);
+            weeks[lastWeekIndex] = weeks[lastWeekIndex].concat(this.getAdjacentAfter(range[range.length - 1].moment, showAdjacentMonths));
             return weeks;
         }
         adjacentMode(range) {
@@ -182,7 +182,7 @@ var HeadlessDatepicker;
         fixedMode(range) {
             const weeks = this.adjacentMode(range);
             while (weeks.length < 6) {
-                const lastDay = weeks[weeks.length - 1].slice(-1)[0].day.clone();
+                const lastDay = weeks[weeks.length - 1].slice(-1)[0].moment.clone();
                 const nextDay = lastDay.add(1, 'day');
                 const newWeek = this.getAdjacentAfter(nextDay, true);
                 // getAdjacentAfter only works with dates AFTER the the date passed. So we have to place the new date at the beginning

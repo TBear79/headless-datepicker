@@ -3,9 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const chai_1 = require("chai");
 const headless_datepicker_1 = require("./headless-datepicker");
 // TODO: December 2018 bug
-// TODO: Rename private methods
-// TODO: Rename day to moment in HdpDate
-// TODO: Move interfaces into module (See definition file for moment)
 describe('Headless datepicker', () => {
     let sut;
     beforeEach(() => {
@@ -51,7 +48,7 @@ describe('Headless datepicker', () => {
             chai_1.expect(selectedDates).not.to.be.null;
             chai_1.expect(selectedDates).to.be.an('array');
             chai_1.expect(selectedDates.length).to.equal(3);
-            chai_1.expect(selectedDates.map((s) => { return s.day.toDate(); })).to.deep.equal(testDates);
+            chai_1.expect(selectedDates.map((s) => { return s.moment.toDate(); })).to.deep.equal(testDates);
         });
     });
     describe('Getting dates for a time span', () => {
@@ -65,8 +62,8 @@ describe('Headless datepicker', () => {
             const dates = sut.getRange(startDate, endDate);
             chai_1.expect(dates).to.be.an('array');
             chai_1.expect(dates.length).to.equal(61);
-            chai_1.expect(dates[0].day.toDate()).to.deep.equal(startDate);
-            chai_1.expect(dates[60].day.toDate()).to.deep.equal(endDate);
+            chai_1.expect(dates[0].moment.toDate()).to.deep.equal(startDate);
+            chai_1.expect(dates[60].moment.toDate()).to.deep.equal(endDate);
         });
         describe('Selected dates', () => {
             it('should have selected dates marked', () => {
@@ -129,9 +126,9 @@ describe('Headless datepicker', () => {
                 disabledDates: disabledDates
             });
             const dates = sut.getRange(startDate, endDate);
-            chai_1.expect(dates[4].day.toDate()).to.deep.equal(disabledDates[0]);
-            chai_1.expect(dates[24].day.toDate()).to.deep.equal(disabledDates[1]);
-            chai_1.expect(dates[45].day.toDate()).to.deep.equal(disabledDates[2]);
+            chai_1.expect(dates[4].moment.toDate()).to.deep.equal(disabledDates[0]);
+            chai_1.expect(dates[24].moment.toDate()).to.deep.equal(disabledDates[1]);
+            chai_1.expect(dates[45].moment.toDate()).to.deep.equal(disabledDates[2]);
             dates.forEach((item, i) => {
                 if (i == 4 || i == 24 || i == 45) {
                     chai_1.expect(item.isDisabled).to.true;
@@ -182,14 +179,14 @@ describe('Headless datepicker', () => {
             });
             it('should respect zero based months', () => {
                 chai_1.expect(calendar.monthInfo.number).to.equal(3);
-                chai_1.expect(calendar.weeks[0][0].day.format('MMMM')).to.equal('April');
+                chai_1.expect(calendar.weeks[0][0].moment.format('MMMM')).to.equal('April');
                 chai_1.expect(calendar.monthInfo.full).to.equal('April');
                 chai_1.expect(calendar.monthInfo.short).to.equal('Apr');
             });
             it('should respect one based months', () => {
                 calendar = sut.getMonth(year, month, 'exact', true);
                 chai_1.expect(calendar.monthInfo.number).to.equal(3);
-                chai_1.expect(calendar.weeks[0][0].day.format('MMMM')).to.equal('March');
+                chai_1.expect(calendar.weeks[0][0].moment.format('MMMM')).to.equal('March');
                 chai_1.expect(calendar.monthInfo.full).to.equal('March');
                 chai_1.expect(calendar.monthInfo.short).to.equal('Mar');
             });
@@ -223,24 +220,24 @@ describe('Headless datepicker', () => {
                 calendar = sut.getMonth(year, month, 'adjacent');
             });
             it('should show previous adjacent month', () => {
-                const days = calendar.weeks[0].slice(0, 6).map(week => week.day.format('YYYY-MM-DD'));
-                chai_1.expect(calendar.weeks[0][6].day.format('YYYY-MM-DD')).to.equal('2017-04-01');
+                const days = calendar.weeks[0].slice(0, 6).map(week => week.moment.format('YYYY-MM-DD'));
+                chai_1.expect(calendar.weeks[0][6].moment.format('YYYY-MM-DD')).to.equal('2017-04-01');
                 chai_1.expect(days).to.deep.equal(['2017-03-26', '2017-03-27', '2017-03-28', '2017-03-29', '2017-03-30', '2017-03-31']);
             });
             it('should show next adjacent month', () => {
-                const days = calendar.weeks[5].slice(1).map(week => week.day.format('YYYY-MM-DD'));
-                chai_1.expect(calendar.weeks[5][0].day.format('YYYY-MM-DD')).to.equal('2017-04-30');
+                const days = calendar.weeks[5].slice(1).map(week => week.moment.format('YYYY-MM-DD'));
+                chai_1.expect(calendar.weeks[5][0].moment.format('YYYY-MM-DD')).to.equal('2017-04-30');
                 chai_1.expect(days).to.deep.equal(['2017-05-01', '2017-05-02', '2017-05-03', '2017-05-04', '2017-05-05', '2017-05-06']);
             });
         });
         describe('"fixed"-mode', function () {
             it('should show 6 weeks for month with 5 weeks', () => {
                 calendar = sut.getMonth(year, 2, 'fixed');
-                chai_1.expect(calendar.weeks.slice(-1)[0].map(item => item.day.format('YYYY-MM-DD'))).to.deep.equal(['2017-04-02', '2017-04-03', '2017-04-04', '2017-04-05', '2017-04-06', '2017-04-07', '2017-04-08']);
+                chai_1.expect(calendar.weeks.slice(-1)[0].map(item => item.moment.format('YYYY-MM-DD'))).to.deep.equal(['2017-04-02', '2017-04-03', '2017-04-04', '2017-04-05', '2017-04-06', '2017-04-07', '2017-04-08']);
             });
             it('should show 6 weeks for month with 6 weeks', () => {
                 calendar = sut.getMonth(year, month, 'fixed');
-                chai_1.expect(calendar.weeks.slice(-1)[0].map(item => item.day.format('YYYY-MM-DD'))).to.deep.equal(['2017-04-30', '2017-05-01', '2017-05-02', '2017-05-03', '2017-05-04', '2017-05-05', '2017-05-06']);
+                chai_1.expect(calendar.weeks.slice(-1)[0].map(item => item.moment.format('YYYY-MM-DD'))).to.deep.equal(['2017-04-30', '2017-05-01', '2017-05-02', '2017-05-03', '2017-05-04', '2017-05-05', '2017-05-06']);
             });
         });
     });
@@ -291,26 +288,26 @@ describe('Headless datepicker', () => {
         it('should be able to set locale for moment', () => {
             let dates;
             dates = sut.getRange(new Date(), new Date());
-            chai_1.expect(dates[0].day.fromNow()).to.equal('a few seconds ago');
+            chai_1.expect(dates[0].moment.fromNow()).to.equal('a few seconds ago');
             sut = new headless_datepicker_1.HeadlessDatepicker.Calendar({ locale: 'da', localeSettings: da });
             dates = sut.getRange(new Date(), new Date());
-            chai_1.expect(dates[0].day.fromNow()).to.equal('få sekunder siden');
+            chai_1.expect(dates[0].moment.fromNow()).to.equal('få sekunder siden');
         });
         it('should respect first day in week, based on locale', () => {
             let dates;
             let calendar;
             dates = sut.getRange(new Date(2017, 3, 1), new Date(2017, 3, 3));
             calendar = sut.getMonth(2017, 3);
-            chai_1.expect(dates[0].day.weekday()).to.equal(6);
-            chai_1.expect(dates[1].day.weekday()).to.equal(0);
-            chai_1.expect(dates[2].day.weekday()).to.equal(1);
+            chai_1.expect(dates[0].moment.weekday()).to.equal(6);
+            chai_1.expect(dates[1].moment.weekday()).to.equal(0);
+            chai_1.expect(dates[2].moment.weekday()).to.equal(1);
             chai_1.expect(calendar.weekDayInfo.min).to.deep.equal(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']);
             sut = new headless_datepicker_1.HeadlessDatepicker.Calendar({ locale: 'da', localeSettings: da });
             dates = sut.getRange(new Date(2017, 3, 1), new Date(2017, 3, 3));
             calendar = sut.getMonth(2017, 3);
-            chai_1.expect(dates[0].day.weekday()).to.equal(5);
-            chai_1.expect(dates[1].day.weekday()).to.equal(6);
-            chai_1.expect(dates[2].day.weekday()).to.equal(0);
+            chai_1.expect(dates[0].moment.weekday()).to.equal(5);
+            chai_1.expect(dates[1].moment.weekday()).to.equal(6);
+            chai_1.expect(dates[2].moment.weekday()).to.equal(0);
             chai_1.expect(calendar.weekDayInfo.min).to.deep.equal(['ma', 'ti', 'on', 'to', 'fr', 'lø', 'sø']);
         });
     });
