@@ -29,7 +29,7 @@ export namespace HeadlessDatepicker {
             return dates
         }
 
-        public getMonth(year: number, month: number, mode: HdpCalendarMode = 'fill', oneBasedMonth: boolean = false): MonthItem {
+        public getMonth(year: number, month: number, mode: HdpCalendarMode = 'fill', oneBasedMonth: boolean = false): CalendarMonth {
             const monthOffset = oneBasedMonth ? 1 : 0
             const startDate = this.hdMoment().year(year).month(month - monthOffset).date(1).toDate()
             const endDate = this.hdMoment().year(year).month(month - monthOffset).add(1, 'months').date(0).toDate()
@@ -50,7 +50,7 @@ export namespace HeadlessDatepicker {
             return calendar
         }
 
-        public getMonths(months: YearMonthPair[], mode: HdpCalendarMode, oneBasedMonth: boolean): MonthItem[] {
+        public getMonths(months: YearMonthPair[], mode: HdpCalendarMode, oneBasedMonth: boolean): CalendarMonth[] {
             return months.map((item) => { return this.getMonth(item.year, item.month, mode, oneBasedMonth) })
         }
 
@@ -284,7 +284,7 @@ export namespace HeadlessDatepicker {
         extras: any
     }
 
-    export interface MonthItem {
+    export interface CalendarMonth {
         weekDayInfo: WeekDayInfo
         year: number
         monthInfo: MonthInfo
