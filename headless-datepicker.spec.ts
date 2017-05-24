@@ -374,6 +374,15 @@ describe('Headless datepicker', () => {
 			expect(calendar.weekDayInfo.min).to.deep.equal(['ma', 'ti', 'on', 'to', 'fr', 'lø', 'sø'])
 		})
 	})
+
+	describe('Bug fixes', () => {
+		it('should return calendar for December 2018', () => {
+			const calendar = sut.getMonth(2018, 12, 'exact', true)
+
+			expect(calendar).not.to.be.null
+			expect(calendar.weeks.reduce((a, b) => a.concat(b)).length).to.equal(31)
+		})
+	})
 })
 
 

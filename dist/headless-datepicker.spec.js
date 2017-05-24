@@ -300,6 +300,13 @@ describe('Headless datepicker', () => {
             chai_1.expect(calendar.weekDayInfo.min).to.deep.equal(['ma', 'ti', 'on', 'to', 'fr', 'lø', 'sø']);
         });
     });
+    describe('Bug fixes', () => {
+        it('should return calendar for December 2018', () => {
+            const calendar = sut.getMonth(2018, 12, 'exact', true);
+            chai_1.expect(calendar).not.to.be.null;
+            chai_1.expect(calendar.weeks.reduce((a, b) => a.concat(b)).length).to.equal(31);
+        });
+    });
 });
 let da = {
     months: "januar_februar_marts_april_maj_juni_juli_august_september_oktober_november_december".split("_"),

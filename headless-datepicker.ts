@@ -190,6 +190,12 @@ export namespace HeadlessDatepicker {
             return dates
         }
 
+        private getLastWeekNumberInYear(range: DateItem[]): number {
+            const lastDayInLastWeek = [...range].reverse().find(d => d.moment.week() !== 1)
+                           
+            return lastDayInLastWeek.moment.week()
+        }
+
         private splitIntoWeeks(range: DateItem[]): DateItem[][] {
             const weeks = []
 
@@ -197,8 +203,9 @@ export namespace HeadlessDatepicker {
             let endWeekNumber = range[range.length - 1].moment.week()
             let newYear = false
 
-            if (startWeekNumber > endWeekNumber) {
-                endWeekNumber = range[range.length - 2].moment.week() + 1
+            if (endWeekNumber == 1) {
+                endWeekNumber = this.getLastWeekNumberInYear(range)
+                endWeekNumber++
                 newYear = true
             }
 

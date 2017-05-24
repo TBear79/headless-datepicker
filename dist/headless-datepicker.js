@@ -146,13 +146,18 @@ var HeadlessDatepicker;
             dates.reverse();
             return dates;
         }
+        getLastWeekNumberInYear(range) {
+            const lastDayInLastWeek = [...range].reverse().find(d => d.moment.week() !== 1);
+            return lastDayInLastWeek.moment.week();
+        }
         splitIntoWeeks(range) {
             const weeks = [];
             let startWeekNumber = range[0].moment.week();
             let endWeekNumber = range[range.length - 1].moment.week();
             let newYear = false;
-            if (startWeekNumber > endWeekNumber) {
-                endWeekNumber = range[range.length - 2].moment.week() + 1;
+            if (endWeekNumber == 1) {
+                endWeekNumber = this.getLastWeekNumberInYear(range);
+                endWeekNumber++;
                 newYear = true;
             }
             for (var i = startWeekNumber; i <= endWeekNumber; i++) {
