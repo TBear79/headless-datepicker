@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HeadlessDatepicker, HdpMonth } from '../../../../headless-datepicker'
+import { HeadlessDatepicker } from '../../../../headless-datepicker'
 import * as moment from 'moment'
 
 @Component({
@@ -8,13 +8,13 @@ import * as moment from 'moment'
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  headlessDatepicker: HeadlessDatepicker
+  headlessDatepicker: HeadlessDatepicker.Calendar
   selectedDate: string
   
-  model: HdpMonth
+  model: HeadlessDatepicker.CalendarMonth
 
   ngOnInit(): void {
-    this.headlessDatepicker = new HeadlessDatepicker()
+    this.headlessDatepicker = new HeadlessDatepicker.Calendar()
 
     const currentDate = new Date()
 

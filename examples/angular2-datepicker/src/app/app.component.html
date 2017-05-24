@@ -17,6 +17,6 @@
     </th>
   </tr>
   <tr *ngFor="let days of model.weeks">
-    <td *ngFor="let day of days"><a *ngIf="day !== null" class="link" (click)="selectDate(day.day.format('YYYY-MM-DD'))">{{day.day.format('DD')}}</a></td>
+    <td *ngFor="let day of days"><a *ngIf="day !== null" class="link" (click)="selectDate(day.moment.format('YYYY-MM-DD'))">{{day.moment.format('DD')}}</a></td>
   </tr>
 </table>
