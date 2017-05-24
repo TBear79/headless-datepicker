@@ -9,8 +9,12 @@ import * as moment from 'moment'
 })
 export class AppComponent implements OnInit {
   
+  private startDate: Date
+  private endDate: Date
 
   ngOnInit(): void {
+    this.startDate = moment().subtract(10, 'days').toDate()
+    this.endDate = moment().add(10, 'days').toDate()
   }
 }
 

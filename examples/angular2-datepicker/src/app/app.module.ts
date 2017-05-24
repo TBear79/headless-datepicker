@@ -5,11 +5,13 @@ import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import { BasicCalendarComponent } from './basic-calendar/basic-calendar.component';
+import { RangePickerComponent } from './range-picker/range-picker.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    BasicCalendarComponent
+    BasicCalendarComponent,
+    RangePickerComponent
   ],
   imports: [
     BrowserModule,

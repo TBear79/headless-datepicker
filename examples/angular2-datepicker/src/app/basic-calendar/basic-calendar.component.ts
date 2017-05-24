@@ -21,7 +21,6 @@ export class BasicCalendarComponent implements OnInit {
     this.headlessDatepicker = new HeadlessDatepicker.Calendar()
 
     const currentDate = new Date()
-console.log('MODE', this.mode)
     this.model = this.headlessDatepicker.getMonth(currentDate.getFullYear(), currentDate.getMonth(), this.mode)
   }
 
