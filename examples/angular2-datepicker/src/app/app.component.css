@@ -1,0 +1,9 @@
+.example {
+    float: left;
+    margin: 1em 1em;
+}
+
+p {
+    width: 20em;
+    min-height: 4em;
+}

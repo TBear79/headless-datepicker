@@ -2,4 +2,46 @@
   Headless datepicker examples
 </h1>
 
-<app-basic-calendar></app-basic-calendar>
+<h2>
+  Calendar modes
+</h2>
+
+<div class="example">
+  <h3>
+    Fill mode
+  </h3>
+  <p>
+    Default behaviour. Always returns seven days for each week. If a date is not in the month, it fills it a null-values.
+  </p>
+  <app-basic-calendar [mode]="'fill'"></app-basic-calendar>
+</div>
+
+<div class="example">
+  <h3>
+    Adjacent mode
+  </h3>
+  <p>
+    Always returns seven days for each week. If a date is not in the month, it still contains the date, but isAdjacent is set to true.
+  </p>
+  <app-basic-calendar [mode]="'adjacent'"></app-basic-calendar>
+</div>
+
+<div class="example">
+  <h3>
+    Exact mode
+  </h3>
+  <p>
+    Doesn't return seven days in a week within the month. If a day is not in the current month, it is simply not part of the array.
+  </p>
+  <app-basic-calendar [mode]="'exact'"></app-basic-calendar>
+</div>
+
+<div class="example">
+  <h3>
+    Fixed mode
+  </h3>
+  <p>
+    Always returns seven days for each week and it always returns six weeks. It fills the adjacent month dates with days.
+  </p>
+  <app-basic-calendar [mode]="'fixed'"></app-basic-calendar>
+</div>
