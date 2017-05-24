@@ -352,4 +352,3 @@ let da = {
         doy: 4
     }
 };
-//# sourceMappingURL=headless-datepicker.spec.js.map

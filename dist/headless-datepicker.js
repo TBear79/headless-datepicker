@@ -209,4 +209,3 @@ var HeadlessDatepicker;
     }
     HeadlessDatepicker.Calendar = Calendar;
 })(HeadlessDatepicker = exports.HeadlessDatepicker || (exports.HeadlessDatepicker = {}));
-//# sourceMappingURL=headless-datepicker.js.map
