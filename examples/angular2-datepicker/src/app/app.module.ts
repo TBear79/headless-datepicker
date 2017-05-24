@@ -4,10 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
+import { BasicCalendarComponent } from './basic-calendar/basic-calendar.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    BasicCalendarComponent
   ],
   imports: [
     BrowserModule,
