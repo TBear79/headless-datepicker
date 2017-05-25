@@ -23,23 +23,23 @@ var HeadlessDatepicker;
             }
             return dates;
         }
-        getMonth(year, month, mode = 'fill', oneBasedMonth = false) {
+        getMonth(yearMonthPair, mode = 'fill', oneBasedMonth = false) {
             const monthOffset = oneBasedMonth ? 1 : 0;
-            const startDate = this.hdMoment().year(year).month(month - monthOffset).date(1).toDate();
-            const endDate = this.hdMoment().year(year).month(month - monthOffset).add(1, 'months').date(0).toDate();
+            const startDate = this.hdMoment().year(yearMonthPair.year).month(yearMonthPair.month - monthOffset).date(1).toDate();
+            const endDate = this.hdMoment().year(yearMonthPair.year).month(yearMonthPair.month - monthOffset).add(1, 'months').date(0).toDate();
             const range = this.getRange(startDate, endDate);
             const weekDays = this.getWeekDays(range);
             const weeks = this.getWeeks(range, mode);
             const calendar = {
                 weekDayInfo: weekDays,
-                year: year,
+                year: yearMonthPair.year,
                 monthInfo: this.getMonthNames(range, monthOffset),
                 weeks: weeks
             };
             return calendar;
         }
-        getMonths(months, mode, oneBasedMonth) {
-            return months.map((item) => { return this.getMonth(item.year, item.month, mode, oneBasedMonth); });
+        getMonths(yearMonthPairs, mode, oneBasedMonth) {
+            return yearMonthPairs.map((item) => { return this.getMonth({ year: item.year, month: item.month }, mode, oneBasedMonth); });
         }
         // createMomentDay
         hdMoment(date) {

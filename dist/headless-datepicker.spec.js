@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const chai_1 = require("chai");
 const headless_datepicker_1 = require("./headless-datepicker");
 const moment = require("moment");
-// Provide Year and Day as YearMonthPair
 describe('Headless datepicker', () => {
     let sut;
     beforeEach(() => {
@@ -157,16 +156,17 @@ describe('Headless datepicker', () => {
         });
     });
     describe('Getting dates in grid by months', () => {
-        let year;
-        let month;
+        let yearMonthPair;
         let calendar;
         beforeEach(() => {
-            year = 2017;
-            month = 3;
+            yearMonthPair = {
+                year: 2017,
+                month: 3
+            };
         });
         describe('"exact"-mode', function () {
             beforeEach(() => {
-                calendar = sut.getMonth(year, month, 'exact');
+                calendar = sut.getMonth(yearMonthPair, 'exact');
             });
             it('should return the calendar as an object with dates divided into weeks', () => {
                 chai_1.expect(calendar.weeks.length).to.equal(6);
@@ -183,7 +183,7 @@ describe('Headless datepicker', () => {
                 chai_1.expect(calendar.monthInfo.short).to.equal('Apr');
             });
             it('should respect one based months', () => {
-                calendar = sut.getMonth(year, month, 'exact', true);
+                calendar = sut.getMonth(yearMonthPair, 'exact', true);
                 chai_1.expect(calendar.monthInfo.number).to.equal(3);
                 chai_1.expect(calendar.weeks[0][0].moment.format('MMMM')).to.equal('March');
                 chai_1.expect(calendar.monthInfo.full).to.equal('March');
@@ -200,7 +200,7 @@ describe('Headless datepicker', () => {
         });
         describe('"fill"-mode', function () {
             beforeEach(() => {
-                calendar = sut.getMonth(year, month, 'fill');
+                calendar = sut.getMonth(yearMonthPair, 'fill');
             });
             it('should return 7 days in all weeks', () => {
                 calendar.weeks.forEach(week => {
@@ -216,7 +216,7 @@ describe('Headless datepicker', () => {
         });
         describe('"adjacent"-mode', function () {
             beforeEach(() => {
-                calendar = sut.getMonth(year, month, 'adjacent');
+                calendar = sut.getMonth(yearMonthPair, 'adjacent');
             });
             it('should show previous adjacent month', () => {
                 const days = calendar.weeks[0].slice(0, 6).map(week => week.moment.format('YYYY-MM-DD'));
@@ -231,11 +231,12 @@ describe('Headless datepicker', () => {
         });
         describe('"fixed"-mode', function () {
             it('should show 6 weeks for month with 5 weeks', () => {
-                calendar = sut.getMonth(year, 2, 'fixed');
+                yearMonthPair.month = 2;
+                calendar = sut.getMonth(yearMonthPair, 'fixed');
                 chai_1.expect(calendar.weeks.slice(-1)[0].map(item => item.moment.format('YYYY-MM-DD'))).to.deep.equal(['2017-04-02', '2017-04-03', '2017-04-04', '2017-04-05', '2017-04-06', '2017-04-07', '2017-04-08']);
             });
             it('should show 6 weeks for month with 6 weeks', () => {
-                calendar = sut.getMonth(year, month, 'fixed');
+                calendar = sut.getMonth(yearMonthPair, 'fixed');
                 chai_1.expect(calendar.weeks.slice(-1)[0].map(item => item.moment.format('YYYY-MM-DD'))).to.deep.equal(['2017-04-30', '2017-05-01', '2017-05-02', '2017-05-03', '2017-05-04', '2017-05-05', '2017-05-06']);
             });
         });
@@ -295,15 +296,16 @@ describe('Headless datepicker', () => {
         it('should respect first day in week, based on locale', () => {
             let dates;
             let calendar;
+            let pair = { year: 2017, month: 3 };
             dates = sut.getRange(new Date(2017, 3, 1), new Date(2017, 3, 3));
-            calendar = sut.getMonth(2017, 3);
+            calendar = sut.getMonth(pair);
             chai_1.expect(dates[0].moment.weekday()).to.equal(6);
             chai_1.expect(dates[1].moment.weekday()).to.equal(0);
             chai_1.expect(dates[2].moment.weekday()).to.equal(1);
             chai_1.expect(calendar.weekDayInfo.min).to.deep.equal(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']);
             sut = new headless_datepicker_1.HeadlessDatepicker.Calendar({ locale: 'da', localeSettings: da });
             dates = sut.getRange(new Date(2017, 3, 1), new Date(2017, 3, 3));
-            calendar = sut.getMonth(2017, 3);
+            calendar = sut.getMonth(pair);
             chai_1.expect(dates[0].moment.weekday()).to.equal(5);
             chai_1.expect(dates[1].moment.weekday()).to.equal(6);
             chai_1.expect(dates[2].moment.weekday()).to.equal(0);
@@ -312,7 +314,7 @@ describe('Headless datepicker', () => {
     });
     describe('Bug fixes', () => {
         it('should return calendar for December 2018', () => {
-            const calendar = sut.getMonth(2018, 12, 'exact', true);
+            const calendar = sut.getMonth({ year: 2018, month: 12 }, 'exact', true);
             chai_1.expect(calendar).not.to.be.null;
             chai_1.expect(calendar.weeks.reduce((a, b) => a.concat(b)).length).to.equal(31);
         });
