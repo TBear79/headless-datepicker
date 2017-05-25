@@ -19,3 +19,7 @@
 .header-table {
     width: 100%;
 }
+
+.today {
+    font-weight: bold;
+}
