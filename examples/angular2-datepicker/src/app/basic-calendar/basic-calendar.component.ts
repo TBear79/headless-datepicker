@@ -9,23 +9,30 @@ import * as moment from 'moment'
 })
 export class BasicCalendarComponent implements OnInit {
   headlessDatepicker: HeadlessDatepicker.Calendar
-  selectedDate: string
-  
+    
   @Input() mode: HeadlessDatepicker.CalendarMode
+
+  @Input() selectedDates: Date[] = []
+  @Input() disabledDates: Date[]
+  @Input() minimumDate: Date
+  @Input() maximumDate: Date
+  @Input() extras: HeadlessDatepicker.ExtraInfo[]
 
   model: HeadlessDatepicker.CalendarMonth
 
   constructor() { }
 
   ngOnInit() {
-    this.headlessDatepicker = new HeadlessDatepicker.Calendar()
+    this.headlessDatepicker = new HeadlessDatepicker.Calendar({ minimumDate: this.minimumDate, maximumDate: this.maximumDate })
+
+    this.headlessDatepicker.selectedDates = this.selectedDates
 
     const currentDate = new Date()
     this.model = this.headlessDatepicker.getMonth({ year: currentDate.getFullYear(), month: currentDate.getMonth() }, this.mode)
   }
 
-  selectDate(date: string) {
-      this.selectedDate = date
+  selectDate(selectedDate: moment.Moment) {
+      this.selectedDates.push(selectedDate.toDate()) 
   }
 
   previousMonth(year: number, month: number) {
@@ -38,6 +45,10 @@ export class BasicCalendarComponent implements OnInit {
     const momentDate = moment(new Date(year, month, 1))
     momentDate.add(1, 'month')
     this.model = this.headlessDatepicker.getMonth({ year: momentDate.year(), month: momentDate.month() }, this.mode)
+  }
+
+  formattedDates(dates: Date[]) {
+    return dates.map(date => moment(date).format('YYYY-MM-DD')).toString() 
   }
 
 }

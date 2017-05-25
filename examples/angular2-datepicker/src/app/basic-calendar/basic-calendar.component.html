@@ -1,4 +1,4 @@
-<input type="text" value="{{selectedDate}}" />
+<input type="text" value="{{ formattedDates(selectedDates) }}" />
 
 <table class="dp1">
   <tr>
@@ -14,10 +14,11 @@
   </tr>
   <tr *ngFor="let days of model.weeks">
     <td *ngFor="let day of days">
-      <a *ngIf="day !== null && !day.isAdjacent" class="link" [ngClass]="{'today': day.isToday}" (click)="selectDate(day.moment.format('YYYY-MM-DD'))">
+      <a *ngIf="day !== null && !day.isAdjacent" class="link" [ngClass]="{ 'today': day.isToday, 'selected': day.isSelected, 'minimum': day.isMinimumDate, 'maximum': day.isMaximumDate, 'not-active': !day.isActive }" (click)="selectDate(day.moment)">
         {{day.moment.format('DD')}}
       </a>
-      <div *ngIf="day !== null && day.isAdjacent" [ngClass]="{'today': day.isToday}">
+      
+      <div *ngIf="day !== null && day.isAdjacent" [ngClass]="{ 'today': day.isToday, 'selected': day.isSelected }">
         {{day.moment.format('DD')}}
       </div>
     </td>

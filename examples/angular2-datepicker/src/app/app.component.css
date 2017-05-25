@@ -7,3 +7,7 @@ p {
     width: 20em;
     min-height: 4em;
 }
+
+h2 {
+    clear: left
+}

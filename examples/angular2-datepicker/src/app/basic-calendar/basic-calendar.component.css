@@ -23,3 +23,20 @@
 .today {
     font-weight: bold;
 }
+
+.selected {
+    border: 1px solid blue;
+}
+
+.minimum {
+    color: green;
+    opacity: 0.5
+}
+
+.maximum {
+    color: red;
+}
+
+.not-active {
+    opacity: 0.5
+}
