@@ -80,6 +80,7 @@ var HeadlessDatepicker;
             return {
                 moment: momentDate,
                 isActive: isActive,
+                isToday: momentDate.isSame(new Date(), 'day'),
                 isSelected: this.isSelectedCheck(date),
                 isMinimumDate: isMinimum,
                 isMaximumDate: isMaximum,

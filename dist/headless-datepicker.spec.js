@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const chai_1 = require("chai");
 const headless_datepicker_1 = require("./headless-datepicker");
-// TODO: isToday
+const moment = require("moment");
 // Provide Year and Day as YearMonthPair
 describe('Headless datepicker', () => {
     let sut;
@@ -54,6 +54,15 @@ describe('Headless datepicker', () => {
             chai_1.expect(dates.length).to.equal(61);
             chai_1.expect(dates[0].moment.toDate()).to.deep.equal(startDate);
             chai_1.expect(dates[60].moment.toDate()).to.deep.equal(endDate);
+        });
+        it('should have todays date selected', () => {
+            let today = moment();
+            startDate = moment().clone().subtract(10, 'days').toDate();
+            endDate = moment().clone().add(10, 'days').toDate();
+            const dates = sut.getRange(startDate, endDate);
+            const todayRange = dates.filter(d => d.isToday);
+            chai_1.expect(todayRange.length).to.equal(1);
+            chai_1.expect(todayRange[0].moment.isSame(today, 'day')).to.be.true;
         });
         describe('Selected dates', () => {
             it('should have selected dates marked', () => {

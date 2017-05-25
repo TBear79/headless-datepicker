@@ -1,7 +1,6 @@
 import { expect, assert } from 'chai'
 import { HeadlessDatepicker } from './headless-datepicker'
-
-// TODO: isToday
+import * as moment from 'moment'
 
 // Provide Year and Day as YearMonthPair
 
@@ -52,8 +51,8 @@ describe('Headless datepicker', () => {
 
 	describe('Getting dates for a time span', () => {
 
-		let startDate;
-		let endDate;
+		let startDate: Date;
+		let endDate: Date;
 
 		beforeEach(() => {
 			startDate = new Date(2017, 2, 1)
@@ -67,6 +66,18 @@ describe('Headless datepicker', () => {
 			expect(dates.length).to.equal(61)
 			expect(dates[0].moment.toDate()).to.deep.equal(startDate)
 			expect(dates[60].moment.toDate()).to.deep.equal(endDate)
+		})
+
+		it('should have todays date selected', () => {
+			let today: moment.Moment = moment()
+			startDate = moment().clone().subtract(10, 'days').toDate()
+    		endDate = moment().clone().add(10, 'days').toDate()
+			const dates = sut.getRange(startDate, endDate)
+
+			const todayRange = dates.filter(d => d.isToday)
+
+			expect(todayRange.length).to.equal(1)
+			expect(todayRange[0].moment.isSame(today, 'day')).to.be.true
 		})
 
 		describe('Selected dates', () => {

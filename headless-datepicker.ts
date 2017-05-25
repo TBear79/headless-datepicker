@@ -99,10 +99,10 @@ export namespace HeadlessDatepicker {
             const isMaximum = this.isMaximumDateCheck(date)
             const isDisabled = this.isDisabledCheck(date)
             const isActive = !isMinimum && !isMaximum && !isDisabled
-
             return {
                 moment: momentDate,
                 isActive: isActive,
+                isToday: momentDate.isSame(new Date(), 'day'), 
                 isSelected: this.isSelectedCheck(date),
                 isMinimumDate: isMinimum,
                 isMaximumDate: isMaximum,
@@ -283,6 +283,7 @@ export namespace HeadlessDatepicker {
     export interface DateItem {
         moment: moment.Moment,
         isActive: boolean,
+        isToday: boolean,
         isSelected: boolean,
         isMinimumDate: boolean,
         isMaximumDate: boolean,
