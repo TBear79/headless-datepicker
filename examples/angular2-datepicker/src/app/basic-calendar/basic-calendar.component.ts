@@ -21,7 +21,7 @@ export class BasicCalendarComponent implements OnInit {
     this.headlessDatepicker = new HeadlessDatepicker.Calendar()
 
     const currentDate = new Date()
-    this.model = this.headlessDatepicker.getMonth(currentDate.getFullYear(), currentDate.getMonth(), this.mode)
+    this.model = this.headlessDatepicker.getMonth({ year: currentDate.getFullYear(), month: currentDate.getMonth() }, this.mode)
   }
 
   selectDate(date: string) {
@@ -31,13 +31,13 @@ export class BasicCalendarComponent implements OnInit {
   previousMonth(year: number, month: number) {
     const momentDate = moment(new Date(year, month, 1))
     momentDate.subtract(1, 'month')
-    this.model = this.headlessDatepicker.getMonth(momentDate.year(), momentDate.month(), this.mode)
+    this.model = this.headlessDatepicker.getMonth({ year: momentDate.year(), month: momentDate.month() }, this.mode)
   }
 
   nextMonth(year: number, month: number) {
     const momentDate = moment(new Date(year, month, 1))
     momentDate.add(1, 'month')
-    this.model = this.headlessDatepicker.getMonth(momentDate.year(), momentDate.month(), this.mode)
+    this.model = this.headlessDatepicker.getMonth({ year: momentDate.year(), month: momentDate.month() }, this.mode)
   }
 
 }
