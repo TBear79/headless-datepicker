@@ -23,7 +23,8 @@
     "core-js": "^2.4.1",
     "moment": "^2.18.1",
     "rxjs": "^5.1.0",
-    "zone.js": "^0.8.4"
+    "zone.js": "^0.8.4",
+    "headless-datepicker": "1.0.0"
   },
   "devDependencies": {
     "@angular/cli": "1.0.4",

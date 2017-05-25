@@ -2,7 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const chai_1 = require("chai");
 const headless_datepicker_1 = require("./headless-datepicker");
-// TODO: December 2018 bug
+// TODO: isToday
+// Provide Year and Day as YearMonthPair
 describe('Headless datepicker', () => {
     let sut;
     beforeEach(() => {
