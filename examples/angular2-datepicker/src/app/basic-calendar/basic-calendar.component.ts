@@ -13,17 +13,17 @@ export class BasicCalendarComponent implements OnInit {
   @Input() mode: HeadlessDatepicker.CalendarMode
 
   @Input() selectedDates: Date[] = []
-  @Input() disabledDates: Date[]
+  @Input() disabledDates: Date[] = []
   @Input() minimumDate: Date
   @Input() maximumDate: Date
-  @Input() extras: HeadlessDatepicker.ExtraInfo[]
+  @Input() extras: HeadlessDatepicker.ExtraInfo[] = []
 
   model: HeadlessDatepicker.CalendarMonth
 
   constructor() { }
 
   ngOnInit() {
-    this.headlessDatepicker = new HeadlessDatepicker.Calendar({ minimumDate: this.minimumDate, maximumDate: this.maximumDate })
+    this.headlessDatepicker = new HeadlessDatepicker.Calendar({ minimumDate: this.minimumDate, maximumDate: this.maximumDate, disabledDates: this.disabledDates, extras: this.extras })
 
     this.headlessDatepicker.selectedDates = this.selectedDates
 

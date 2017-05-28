@@ -14,12 +14,16 @@
   </tr>
   <tr *ngFor="let days of model.weeks">
     <td *ngFor="let day of days">
-      <a *ngIf="day !== null && !day.isAdjacent" class="link" [ngClass]="{ 'today': day.isToday, 'selected': day.isSelected, 'minimum': day.isMinimumDate, 'maximum': day.isMaximumDate, 'not-active': !day.isActive }" (click)="selectDate(day.moment)">
-        {{day.moment.format('DD')}}
-      </a>
-      
-      <div *ngIf="day !== null && day.isAdjacent" [ngClass]="{ 'today': day.isToday, 'selected': day.isSelected }">
-        {{day.moment.format('DD')}}
+      <div *ngIf="day !== null">
+        <a *ngIf="!day.isAdjacent && day.isActive" class="link" [ngClass]="{ 'today': day.isToday, 'selected': day.isSelected, 'minimum': day.isMinimumDate, 'maximum': day.isMaximumDate, 'not-active': !day.isActive }" (click)="selectDate(day.moment)">
+          {{day.moment.format('DD')}}
+        </a>
+        <div *ngIf="(!day.isActive || day.isAdjacent)" [ngClass]="{ 'today': day.isToday, 'selected': day.isSelected, 'minimum': day.isMinimumDate, 'maximum': day.isMaximumDate, 'not-active': !day.isActive }">
+          {{day.moment.format('DD')}}
+        </div>
+        <div *ngIf="day.extras !== null">
+          {{day.extras}}
+        </div>
       </div>
     </td>
   </tr>
