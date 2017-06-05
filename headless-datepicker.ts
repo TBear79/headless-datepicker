@@ -4,6 +4,7 @@ export namespace HeadlessDatepicker {
     export class Calendar {
         public selectedDates: Date[] = []
         private localMoment: any
+        private monthOffset: number
 
         constructor(
             public options: Options = {}
@@ -11,6 +12,10 @@ export namespace HeadlessDatepicker {
             options.locale = options.locale || 'en'
             options.disabledDates = options.disabledDates || []
             options.extras = options.extras || []
+            options.calendarMode = options.calendarMode || 'fill'
+            options.zeroBasedMonth = options.zeroBasedMonth === undefined ? false : options.zeroBasedMonth
+
+            this.monthOffset = this.options.zeroBasedMonth ? 0 : 1
 
             this.localMoment = moment
 
@@ -29,29 +34,28 @@ export namespace HeadlessDatepicker {
             return dates
         }
 
-        public getMonth(yearMonthPair: YearMonthPair, mode: CalendarMode = 'fill', oneBasedMonth: boolean = false): CalendarMonth {
-            const monthOffset = oneBasedMonth ? 1 : 0
-            const startDate = this.hdMoment().year(yearMonthPair.year).month(yearMonthPair.month - monthOffset).date(1).toDate()
-            const endDate = this.hdMoment().year(yearMonthPair.year).month(yearMonthPair.month - monthOffset).add(1, 'months').date(0).toDate()
+        public getMonth(yearMonthPair: YearMonthPair): CalendarMonth {
+            const startDate = this.hdMoment().year(yearMonthPair.year).month(yearMonthPair.month - this.monthOffset).date(1).toDate()
+            const endDate = this.hdMoment().year(yearMonthPair.year).month(yearMonthPair.month - this.monthOffset).add(1, 'months').date(0).toDate()
 
             const range = this.getRange(startDate, endDate)
 
             const weekDays = this.getWeekDays(range)
 
-            const weeks = this.getWeeks(range, mode)
+            const weeks = this.getWeeks(range, this.options.calendarMode)
 
             const calendar = {
                 weekDayInfo: weekDays,
                 year: yearMonthPair.year,
-                monthInfo: this.getMonthNames(range, monthOffset),
+                monthInfo: this.getMonthNames(range, this.monthOffset),
                 weeks: weeks
             }
 
             return calendar
         }
 
-        public getMonths(yearMonthPairs: YearMonthPair[], mode: CalendarMode, oneBasedMonth: boolean): CalendarMonth[] {
-            return yearMonthPairs.map((item) => { return this.getMonth({ year: item.year, month: item.month }, mode, oneBasedMonth) })
+        public getMonths(yearMonthPairs: YearMonthPair[]): CalendarMonth[] {
+            return yearMonthPairs.map((item) => { return this.getMonth({ year: item.year, month: item.month }) })
         }
 
         // createMomentDay
@@ -145,10 +149,10 @@ export namespace HeadlessDatepicker {
         }
 
         private getMonthNames(range: DateItem[], monthOffset: number): MonthInfo {
+            
             const firstDayOfMonth = range.find((item) => {
                 return item && item.isAdjacent == false
             })
-
             return {
                 number: firstDayOfMonth.moment.month() + monthOffset,
                 full: firstDayOfMonth.moment.format('MMMM'),
@@ -277,7 +281,9 @@ export namespace HeadlessDatepicker {
         minimumDate?: Date
         maximumDate?: Date
         disabledDates?: Date[]
-        extras?: ExtraInfo[]
+        extras?: ExtraInfo[],
+        calendarMode?: CalendarMode,
+        zeroBasedMonth?: boolean
     }
 
     export interface DateItem {
