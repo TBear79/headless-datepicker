@@ -29,14 +29,14 @@ describe('Headless datepicker', () => {
 				minimumDate: minimumDate,
 				maximumDate: maximumDate,
 				disabledDates: disabledDates,
-				oneBasedMonth: true,
+				oneBasedMonth: false,
 				calendarMode: 'exact'
 			})
 
 			expect(sut.options.minimumDate).to.deep.equal(minimumDate)
 			expect(sut.options.maximumDate).to.deep.equal(maximumDate)
 			expect(sut.options.disabledDates).to.deep.equal(disabledDates)
-			expect(sut.options.oneBasedMonth).to.be.true
+			expect(sut.options.oneBasedMonth).to.be.false
 			expect(sut.options.calendarMode).to.equal('exact')
 		})
 
@@ -50,8 +50,8 @@ describe('Headless datepicker', () => {
 			expect(sut2.options.minimumDate).to.deep.equal(date2)
 		})
 
-		it('should set oneBasedMonth to false when not supplied', () => {
-			expect(sut.options.oneBasedMonth).to.be.false
+		it('should set oneBasedMonth to true when not supplied', () => {
+			expect(sut.options.oneBasedMonth).to.be.true
 		})
 
 		it('should fill-mode to be default', () => {
@@ -213,7 +213,7 @@ describe('Headless datepicker', () => {
 		beforeEach(() => {
 			yearMonthPair = {
 				year: 2017,
-				month: 3
+				month: 4
 			}
 		})
 
@@ -234,19 +234,20 @@ describe('Headless datepicker', () => {
 			})
 
 			it('should respect zero based months', () => {
-				expect(calendar.monthInfo.number).to.equal(3)
-				expect(calendar.weeks[0][0].moment.format('MMMM')).to.equal('April')
-				expect(calendar.monthInfo.full).to.equal('April')
-				expect(calendar.monthInfo.short).to.equal('Apr')
+				sut = new HeadlessDatepicker.Calendar({ oneBasedMonth: false, calendarMode: 'exact' })
+				calendar = sut.getMonth(yearMonthPair)
+				expect(calendar.monthInfo.number).to.equal(4)
+				expect(calendar.weeks[0][0].moment.format('MMMM')).to.equal('May')
+				expect(calendar.monthInfo.full).to.equal('May')
+				expect(calendar.monthInfo.short).to.equal('May')
 			})
 
 			it('should respect one based months', () => {
-				sut = new HeadlessDatepicker.Calendar({ calendarMode: 'exact', oneBasedMonth: true })
-				calendar = sut.getMonth(yearMonthPair)
-				expect(calendar.monthInfo.number).to.equal(3)
-				expect(calendar.weeks[0][0].moment.format('MMMM')).to.equal('March')
-				expect(calendar.monthInfo.full).to.equal('March')
-				expect(calendar.monthInfo.short).to.equal('Mar')
+				expect(calendar.monthInfo.number).to.equal(4)
+				expect(calendar.weeks[0][0].moment.format('MMMM')).to.equal('April')
+				expect(calendar.monthInfo.full).to.equal('April')
+				expect(calendar.monthInfo.short).to.equal('Apr')
+				
 			})
 
 			it('should return correct number of days for each week', function () {
@@ -308,7 +309,7 @@ describe('Headless datepicker', () => {
 			})
 
 			it('should show 6 weeks for month with 5 weeks', () => {
-				yearMonthPair.month = 2
+				yearMonthPair.month = 3
 				calendar = sut.getMonth(yearMonthPair)
 				expect(calendar.weeks.slice(-1)[0].map(item => item.moment.format('YYYY-MM-DD'))).to.deep.equal(['2017-04-02', '2017-04-03', '2017-04-04', '2017-04-05', '2017-04-06', '2017-04-07', '2017-04-08'])
 			})

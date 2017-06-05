@@ -26,13 +26,13 @@ describe('Headless datepicker', () => {
                 minimumDate: minimumDate,
                 maximumDate: maximumDate,
                 disabledDates: disabledDates,
-                oneBasedMonth: true,
+                oneBasedMonth: false,
                 calendarMode: 'exact'
             });
             chai_1.expect(sut.options.minimumDate).to.deep.equal(minimumDate);
             chai_1.expect(sut.options.maximumDate).to.deep.equal(maximumDate);
             chai_1.expect(sut.options.disabledDates).to.deep.equal(disabledDates);
-            chai_1.expect(sut.options.oneBasedMonth).to.be.true;
+            chai_1.expect(sut.options.oneBasedMonth).to.be.false;
             chai_1.expect(sut.options.calendarMode).to.equal('exact');
         });
         it('should support multiple objects', () => {
@@ -43,8 +43,8 @@ describe('Headless datepicker', () => {
             chai_1.expect(sut.options.minimumDate).to.deep.equal(date1);
             chai_1.expect(sut2.options.minimumDate).to.deep.equal(date2);
         });
-        it('should set oneBasedMonth to false when not supplied', () => {
-            chai_1.expect(sut.options.oneBasedMonth).to.be.false;
+        it('should set oneBasedMonth to true when not supplied', () => {
+            chai_1.expect(sut.options.oneBasedMonth).to.be.true;
         });
         it('should fill-mode to be default', () => {
             chai_1.expect(sut.options.calendarMode).to.equal('fill');
@@ -171,7 +171,7 @@ describe('Headless datepicker', () => {
         beforeEach(() => {
             yearMonthPair = {
                 year: 2017,
-                month: 3
+                month: 4
             };
         });
         describe('"exact"-mode', function () {
@@ -188,18 +188,18 @@ describe('Headless datepicker', () => {
                 chai_1.expect(calendar.weekDayInfo.min).to.deep.equal(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']);
             });
             it('should respect zero based months', () => {
-                chai_1.expect(calendar.monthInfo.number).to.equal(3);
+                sut = new headless_datepicker_1.HeadlessDatepicker.Calendar({ oneBasedMonth: false, calendarMode: 'exact' });
+                calendar = sut.getMonth(yearMonthPair);
+                chai_1.expect(calendar.monthInfo.number).to.equal(4);
+                chai_1.expect(calendar.weeks[0][0].moment.format('MMMM')).to.equal('May');
+                chai_1.expect(calendar.monthInfo.full).to.equal('May');
+                chai_1.expect(calendar.monthInfo.short).to.equal('May');
+            });
+            it('should respect one based months', () => {
+                chai_1.expect(calendar.monthInfo.number).to.equal(4);
                 chai_1.expect(calendar.weeks[0][0].moment.format('MMMM')).to.equal('April');
                 chai_1.expect(calendar.monthInfo.full).to.equal('April');
                 chai_1.expect(calendar.monthInfo.short).to.equal('Apr');
-            });
-            it('should respect one based months', () => {
-                sut = new headless_datepicker_1.HeadlessDatepicker.Calendar({ calendarMode: 'exact', oneBasedMonth: true });
-                calendar = sut.getMonth(yearMonthPair);
-                chai_1.expect(calendar.monthInfo.number).to.equal(3);
-                chai_1.expect(calendar.weeks[0][0].moment.format('MMMM')).to.equal('March');
-                chai_1.expect(calendar.monthInfo.full).to.equal('March');
-                chai_1.expect(calendar.monthInfo.short).to.equal('Mar');
             });
             it('should return correct number of days for each week', function () {
                 chai_1.expect(calendar.weeks[0].length).to.equal(1);
@@ -249,7 +249,7 @@ describe('Headless datepicker', () => {
                 calendar = sut.getMonth(yearMonthPair);
             });
             it('should show 6 weeks for month with 5 weeks', () => {
-                yearMonthPair.month = 2;
+                yearMonthPair.month = 3;
                 calendar = sut.getMonth(yearMonthPair);
                 chai_1.expect(calendar.weeks.slice(-1)[0].map(item => item.moment.format('YYYY-MM-DD'))).to.deep.equal(['2017-04-02', '2017-04-03', '2017-04-04', '2017-04-05', '2017-04-06', '2017-04-07', '2017-04-08']);
             });

@@ -12,7 +12,7 @@ export namespace HeadlessDatepicker {
             options.disabledDates = options.disabledDates || []
             options.extras = options.extras || []
             options.calendarMode = options.calendarMode || 'fill'
-            options.oneBasedMonth = options.oneBasedMonth === undefined ? false : options.oneBasedMonth
+            options.oneBasedMonth = options.oneBasedMonth === undefined ? true : options.oneBasedMonth
 
             this.localMoment = moment
 
@@ -147,10 +147,10 @@ export namespace HeadlessDatepicker {
         }
 
         private getMonthNames(range: DateItem[], monthOffset: number): MonthInfo {
+            
             const firstDayOfMonth = range.find((item) => {
                 return item && item.isAdjacent == false
             })
-
             return {
                 number: firstDayOfMonth.moment.month() + monthOffset,
                 full: firstDayOfMonth.moment.format('MMMM'),
