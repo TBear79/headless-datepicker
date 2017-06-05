@@ -1,4 +1,4 @@
-<select>
+<select multiple>
   <option *ngFor="let day of model" [attr.selected]="day.isToday ? 'checked' : null">
     {{day.moment.format('YYYY-MM-DD')}}
   </option>
