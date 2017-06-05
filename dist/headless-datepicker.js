@@ -10,6 +10,8 @@ var HeadlessDatepicker;
             options.locale = options.locale || 'en';
             options.disabledDates = options.disabledDates || [];
             options.extras = options.extras || [];
+            options.calendarMode = options.calendarMode || 'fill';
+            options.oneBasedMonth = options.oneBasedMonth === undefined ? false : options.oneBasedMonth;
             this.localMoment = moment;
             if (!this.localMoment)
                 throw ('headlessDatepicker: momentjs is not available. Please do import or require(\'moment\') or reference it from a script tag.');
@@ -23,13 +25,13 @@ var HeadlessDatepicker;
             }
             return dates;
         }
-        getMonth(yearMonthPair, mode = 'fill', oneBasedMonth = false) {
-            const monthOffset = oneBasedMonth ? 1 : 0;
+        getMonth(yearMonthPair) {
+            const monthOffset = this.options.oneBasedMonth ? 1 : 0;
             const startDate = this.hdMoment().year(yearMonthPair.year).month(yearMonthPair.month - monthOffset).date(1).toDate();
             const endDate = this.hdMoment().year(yearMonthPair.year).month(yearMonthPair.month - monthOffset).add(1, 'months').date(0).toDate();
             const range = this.getRange(startDate, endDate);
             const weekDays = this.getWeekDays(range);
-            const weeks = this.getWeeks(range, mode);
+            const weeks = this.getWeeks(range, this.options.calendarMode);
             const calendar = {
                 weekDayInfo: weekDays,
                 year: yearMonthPair.year,
@@ -38,8 +40,8 @@ var HeadlessDatepicker;
             };
             return calendar;
         }
-        getMonths(yearMonthPairs, mode, oneBasedMonth) {
-            return yearMonthPairs.map((item) => { return this.getMonth({ year: item.year, month: item.month }, mode, oneBasedMonth); });
+        getMonths(yearMonthPairs) {
+            return yearMonthPairs.map((item) => { return this.getMonth({ year: item.year, month: item.month }); });
         }
         // createMomentDay
         hdMoment(date) {

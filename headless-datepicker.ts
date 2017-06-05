@@ -11,6 +11,8 @@ export namespace HeadlessDatepicker {
             options.locale = options.locale || 'en'
             options.disabledDates = options.disabledDates || []
             options.extras = options.extras || []
+            options.calendarMode = options.calendarMode || 'fill'
+            options.oneBasedMonth = options.oneBasedMonth === undefined ? false : options.oneBasedMonth
 
             this.localMoment = moment
 
@@ -29,8 +31,8 @@ export namespace HeadlessDatepicker {
             return dates
         }
 
-        public getMonth(yearMonthPair: YearMonthPair, mode: CalendarMode = 'fill', oneBasedMonth: boolean = false): CalendarMonth {
-            const monthOffset = oneBasedMonth ? 1 : 0
+        public getMonth(yearMonthPair: YearMonthPair): CalendarMonth {
+            const monthOffset = this.options.oneBasedMonth ? 1 : 0
             const startDate = this.hdMoment().year(yearMonthPair.year).month(yearMonthPair.month - monthOffset).date(1).toDate()
             const endDate = this.hdMoment().year(yearMonthPair.year).month(yearMonthPair.month - monthOffset).add(1, 'months').date(0).toDate()
 
@@ -38,7 +40,7 @@ export namespace HeadlessDatepicker {
 
             const weekDays = this.getWeekDays(range)
 
-            const weeks = this.getWeeks(range, mode)
+            const weeks = this.getWeeks(range, this.options.calendarMode)
 
             const calendar = {
                 weekDayInfo: weekDays,
@@ -50,8 +52,8 @@ export namespace HeadlessDatepicker {
             return calendar
         }
 
-        public getMonths(yearMonthPairs: YearMonthPair[], mode: CalendarMode, oneBasedMonth: boolean): CalendarMonth[] {
-            return yearMonthPairs.map((item) => { return this.getMonth({ year: item.year, month: item.month }, mode, oneBasedMonth) })
+        public getMonths(yearMonthPairs: YearMonthPair[]): CalendarMonth[] {
+            return yearMonthPairs.map((item) => { return this.getMonth({ year: item.year, month: item.month }) })
         }
 
         // createMomentDay
@@ -277,7 +279,9 @@ export namespace HeadlessDatepicker {
         minimumDate?: Date
         maximumDate?: Date
         disabledDates?: Date[]
-        extras?: ExtraInfo[]
+        extras?: ExtraInfo[],
+        calendarMode?: CalendarMode,
+        oneBasedMonth?: boolean
     }
 
     export interface DateItem {

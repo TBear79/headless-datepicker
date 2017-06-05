@@ -28,12 +28,16 @@ describe('Headless datepicker', () => {
 			sut = new HeadlessDatepicker.Calendar({
 				minimumDate: minimumDate,
 				maximumDate: maximumDate,
-				disabledDates: disabledDates
+				disabledDates: disabledDates,
+				oneBasedMonth: true,
+				calendarMode: 'exact'
 			})
 
 			expect(sut.options.minimumDate).to.deep.equal(minimumDate)
 			expect(sut.options.maximumDate).to.deep.equal(maximumDate)
 			expect(sut.options.disabledDates).to.deep.equal(disabledDates)
+			expect(sut.options.oneBasedMonth).to.be.true
+			expect(sut.options.calendarMode).to.equal('exact')
 		})
 
 		it('should support multiple objects', () => {
@@ -44,6 +48,14 @@ describe('Headless datepicker', () => {
 
 			expect(sut.options.minimumDate).to.deep.equal(date1)
 			expect(sut2.options.minimumDate).to.deep.equal(date2)
+		})
+
+		it('should set oneBasedMonth to false when not supplied', () => {
+			expect(sut.options.oneBasedMonth).to.be.false
+		})
+
+		it('should fill-mode to be default', () => {
+			expect(sut.options.calendarMode).to.equal('fill')
 		})
 	})
 
@@ -207,7 +219,8 @@ describe('Headless datepicker', () => {
 
 		describe('"exact"-mode', function () {
 			beforeEach(() => {
-				calendar = sut.getMonth(yearMonthPair, 'exact')
+				sut = new HeadlessDatepicker.Calendar({ calendarMode: 'exact' })
+				calendar = sut.getMonth(yearMonthPair)
 			})
 
 			it('should return the calendar as an object with dates divided into weeks', () => {
@@ -228,8 +241,8 @@ describe('Headless datepicker', () => {
 			})
 
 			it('should respect one based months', () => {
-				calendar = sut.getMonth(yearMonthPair, 'exact', true)
-
+				sut = new HeadlessDatepicker.Calendar({ calendarMode: 'exact', oneBasedMonth: true })
+				calendar = sut.getMonth(yearMonthPair)
 				expect(calendar.monthInfo.number).to.equal(3)
 				expect(calendar.weeks[0][0].moment.format('MMMM')).to.equal('March')
 				expect(calendar.monthInfo.full).to.equal('March')
@@ -248,7 +261,8 @@ describe('Headless datepicker', () => {
 
 		describe('"fill"-mode', function () {
 			beforeEach(() => {
-				calendar = sut.getMonth(yearMonthPair, 'fill')
+				sut = new HeadlessDatepicker.Calendar({ calendarMode: 'fill' })
+				calendar = sut.getMonth(yearMonthPair)
 			})
 
 			it('should return 7 days in all weeks', () => {
@@ -268,7 +282,8 @@ describe('Headless datepicker', () => {
 
 		describe('"adjacent"-mode', function () {
 			beforeEach(() => {
-				calendar = sut.getMonth(yearMonthPair, 'adjacent')
+				sut = new HeadlessDatepicker.Calendar({ calendarMode: 'adjacent' })
+				calendar = sut.getMonth(yearMonthPair)
 			})
 
 			it('should show previous adjacent month', () => {
@@ -287,14 +302,18 @@ describe('Headless datepicker', () => {
 		})
 
 		describe('"fixed"-mode', function () {
+			beforeEach(() => {
+				sut = new HeadlessDatepicker.Calendar({ calendarMode: 'fixed' })
+				calendar = sut.getMonth(yearMonthPair)
+			})
+
 			it('should show 6 weeks for month with 5 weeks', () => {
 				yearMonthPair.month = 2
-				calendar = sut.getMonth(yearMonthPair, 'fixed')
+				calendar = sut.getMonth(yearMonthPair)
 				expect(calendar.weeks.slice(-1)[0].map(item => item.moment.format('YYYY-MM-DD'))).to.deep.equal(['2017-04-02', '2017-04-03', '2017-04-04', '2017-04-05', '2017-04-06', '2017-04-07', '2017-04-08'])
 			})
 
 			it('should show 6 weeks for month with 6 weeks', () => {
-				calendar = sut.getMonth(yearMonthPair, 'fixed')
 				expect(calendar.weeks.slice(-1)[0].map(item => item.moment.format('YYYY-MM-DD'))).to.deep.equal(['2017-04-30', '2017-05-01', '2017-05-02', '2017-05-03', '2017-05-04', '2017-05-05', '2017-05-06'])
 			})
 		})
@@ -330,7 +349,8 @@ describe('Headless datepicker', () => {
 				{ year: 2017, month: 12 }
 			]
 
-			calendars = sut.getMonths(months, 'exact', true)
+			sut = new HeadlessDatepicker.Calendar({ calendarMode: 'exact', oneBasedMonth: true })
+			calendars = sut.getMonths(months)
 
 			const reduceFn = (a, b) => a.concat(b)
 
@@ -391,7 +411,8 @@ describe('Headless datepicker', () => {
 
 	describe('Bug fixes', () => {
 		it('should return calendar for December 2018', () => {
-			const calendar = sut.getMonth({ year: 2018, month: 12 }, 'exact', true)
+			sut = new HeadlessDatepicker.Calendar({ calendarMode: 'exact', oneBasedMonth: true })
+			const calendar = sut.getMonth({ year: 2018, month: 12 })
 
 			expect(calendar).not.to.be.null
 			expect(calendar.weeks.reduce((a, b) => a.concat(b)).length).to.equal(31)
