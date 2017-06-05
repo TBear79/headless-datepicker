@@ -11,7 +11,8 @@ var HeadlessDatepicker;
             options.disabledDates = options.disabledDates || [];
             options.extras = options.extras || [];
             options.calendarMode = options.calendarMode || 'fill';
-            options.oneBasedMonth = options.oneBasedMonth === undefined ? true : options.oneBasedMonth;
+            options.zeroBasedMonth = options.zeroBasedMonth === undefined ? false : options.zeroBasedMonth;
+            this.monthOffset = this.options.zeroBasedMonth ? 0 : 1;
             this.localMoment = moment;
             if (!this.localMoment)
                 throw ('headlessDatepicker: momentjs is not available. Please do import or require(\'moment\') or reference it from a script tag.');
@@ -26,16 +27,15 @@ var HeadlessDatepicker;
             return dates;
         }
         getMonth(yearMonthPair) {
-            const monthOffset = this.options.oneBasedMonth ? 1 : 0;
-            const startDate = this.hdMoment().year(yearMonthPair.year).month(yearMonthPair.month - monthOffset).date(1).toDate();
-            const endDate = this.hdMoment().year(yearMonthPair.year).month(yearMonthPair.month - monthOffset).add(1, 'months').date(0).toDate();
+            const startDate = this.hdMoment().year(yearMonthPair.year).month(yearMonthPair.month - this.monthOffset).date(1).toDate();
+            const endDate = this.hdMoment().year(yearMonthPair.year).month(yearMonthPair.month - this.monthOffset).add(1, 'months').date(0).toDate();
             const range = this.getRange(startDate, endDate);
             const weekDays = this.getWeekDays(range);
             const weeks = this.getWeeks(range, this.options.calendarMode);
             const calendar = {
                 weekDayInfo: weekDays,
                 year: yearMonthPair.year,
-                monthInfo: this.getMonthNames(range, monthOffset),
+                monthInfo: this.getMonthNames(range, this.monthOffset),
                 weeks: weeks
             };
             return calendar;

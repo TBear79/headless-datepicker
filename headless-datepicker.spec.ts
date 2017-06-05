@@ -29,14 +29,14 @@ describe('Headless datepicker', () => {
 				minimumDate: minimumDate,
 				maximumDate: maximumDate,
 				disabledDates: disabledDates,
-				oneBasedMonth: false,
+				zeroBasedMonth: true,
 				calendarMode: 'exact'
 			})
 
 			expect(sut.options.minimumDate).to.deep.equal(minimumDate)
 			expect(sut.options.maximumDate).to.deep.equal(maximumDate)
 			expect(sut.options.disabledDates).to.deep.equal(disabledDates)
-			expect(sut.options.oneBasedMonth).to.be.false
+			expect(sut.options.zeroBasedMonth).to.be.true
 			expect(sut.options.calendarMode).to.equal('exact')
 		})
 
@@ -50,8 +50,8 @@ describe('Headless datepicker', () => {
 			expect(sut2.options.minimumDate).to.deep.equal(date2)
 		})
 
-		it('should set oneBasedMonth to true when not supplied', () => {
-			expect(sut.options.oneBasedMonth).to.be.true
+		it('should set zeroBasedMonth to true when not supplied', () => {
+			expect(sut.options.zeroBasedMonth).to.be.false
 		})
 
 		it('should fill-mode to be default', () => {
@@ -234,7 +234,7 @@ describe('Headless datepicker', () => {
 			})
 
 			it('should respect zero based months', () => {
-				sut = new HeadlessDatepicker.Calendar({ oneBasedMonth: false, calendarMode: 'exact' })
+				sut = new HeadlessDatepicker.Calendar({ zeroBasedMonth: true, calendarMode: 'exact' })
 				calendar = sut.getMonth(yearMonthPair)
 				expect(calendar.monthInfo.number).to.equal(4)
 				expect(calendar.weeks[0][0].moment.format('MMMM')).to.equal('May')
@@ -350,7 +350,7 @@ describe('Headless datepicker', () => {
 				{ year: 2017, month: 12 }
 			]
 
-			sut = new HeadlessDatepicker.Calendar({ calendarMode: 'exact', oneBasedMonth: true })
+			sut = new HeadlessDatepicker.Calendar({ calendarMode: 'exact', zeroBasedMonth: false })
 			calendars = sut.getMonths(months)
 
 			const reduceFn = (a, b) => a.concat(b)
@@ -412,7 +412,7 @@ describe('Headless datepicker', () => {
 
 	describe('Bug fixes', () => {
 		it('should return calendar for December 2018', () => {
-			sut = new HeadlessDatepicker.Calendar({ calendarMode: 'exact', oneBasedMonth: true })
+			sut = new HeadlessDatepicker.Calendar({ calendarMode: 'exact', zeroBasedMonth: true })
 			const calendar = sut.getMonth({ year: 2018, month: 12 })
 
 			expect(calendar).not.to.be.null
