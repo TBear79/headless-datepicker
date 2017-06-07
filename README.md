@@ -5,9 +5,8 @@ Provides the logic for creating a datepicker. No matter if you are preferring va
 
 
 * Easy to use and fast to implement
-* Stable
-* Very few dependencies
 * Releaves you of the bore in programming your own datepicker logic
+* Relies on [moment.js](https://momentjs.com/)
 
 ## Installation
 
@@ -32,41 +31,100 @@ Then use it like this
 	<script>
 		// You must install momentjs in order to use headless-datepicker
 		// It seems like you have to use require.js or similar to use moment.js
-		var headlessDatepicker = new HeadlessDatepicker()
+		var calendar = new HeadlessDatepicker.Calendar()
 	</script>
 ```
 
-## Returned objects
+## Methods
+
+### getRange
+
+Returns an array of DateItems within a given date-span.
+
+``` javascript
+	var startDate = new Date(2017, 2, 15)
+	var endDate = new Date(2017, 2, 30)
+
+	var calendar = new HeadlessDatepicker.Calendar()
+
+	var range = calendar.getRange(startDate, endDate)
+
+	// range contains an array of DateItems from startDate to endDate.
+	// Both dates inclusive
+```
+
+### getMonth
+
+``` javascript
+	var calendar = new HeadlessDatepicker.Calendar()
+
+	var calendarMonth = calendar.getMonth({ year: 2017, month: 3})
+
+	// calendarMonth contains an array
+```
+
+### getMonths
+
+## Objects
 
 ### DateItem
 
 The methods getRange, getCalendar and getCalendars all returns the DateItem object, wrapped in arrays or CalendarMonth-object.
 
 ``` javascript
-	{
-	moment: moment.Moment, 	// moment instance of the day
-        isActive: boolean,	// true when a date is not below minimumDate, above maximumDate or a disabledDate
-        isToday: boolean,	// true when the day is todays date
-        isSelected: boolean,	// true when the date is selected	
-        isBelowMinimumDate: boolean,	// true when the date is below the minimum date
-        isAboveMaximumDate: boolean,	// true when the date is above the maximumDate
-        isDisabled: boolean,	// true when the date is disabled
-        isAdjacent: boolean,	// true when date date belongs to a surrounding month
-        extras: any	// Array of data you wish to attach to the dates
-	}
+{
+	moment: Moment, 	// moment instance of the day
+	isActive: boolean,	// true when a date is not below minimumDate, above maximumDate or a disabledDate
+	isToday: boolean,	// true when the day is todays date
+	isSelected: boolean,	// true when the date is selected	
+	isBelowMinimumDate: boolean,	// true when the date is below the minimum date
+	isAboveMaximumDate: boolean,	// true when the date is above the maximumDate
+	isDisabled: boolean,	// true when the date is disabled
+	isAdjacent: boolean,	// true when date date belongs to a surrounding month
+	extras: any		// any additional data that you have attached to a specific date
+}
 ```
 
 ### MonthCalendar
 
-## Methods
+The methods getCalendar and getCalendars both returns the MonthCalendar object. 
 
-### getRange
+``` javascript
+{
+	weekDayInfo: WeekDayInfo // Use this to display week day names.
+	year: number // The year that the month belongs to
+	monthInfo: MonthInfo // Use this to display the name of the month
+	weeks: DateItem[][] // DateItems in array for each week.
+}
+```
 
-### getMonth
+### WeekDayInfo
 
-### getMonths
+The week day names presented in different forms. The object is localized from the moment locale.
+
+``` javascript
+{ 
+	full: string[] 		// Sunday, Monday, Tuesday etc.
+	short: string[] 	// Sun, Mon, Tues etc.
+	min: string[]  		// S, M, T etc. 
+}
+```
+
+### MonthInfo
+
+``` javascript
+{
+	number: number	// The month number in the year
+	full: string	// January, February, March etc.
+	short: string	// Jan, Feb, Mar etc.
+}
+```
+
+
 
 ## Options
+
+Options can be on initialization or at any point afterwards
 
 ### locale
 

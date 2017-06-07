@@ -314,7 +314,7 @@ export namespace HeadlessDatepicker {
         isAboveMaximumDate: boolean,
         isDisabled: boolean,
         isAdjacent: boolean,
-        extras: ExtraInfo[]
+        extras: any
     }
 
     export interface CalendarMonth {
