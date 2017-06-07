@@ -73,12 +73,12 @@ export namespace HeadlessDatepicker {
         }
 
         // minimumDateIsReached
-        private isMinimumDateCheck(date: Date): boolean {
+        private isBelowMinimumDateCheck(date: Date): boolean {
             return this.options.minimumDate ? this.hdMoment(this.options.minimumDate).isAfter(date, 'day') : false
         }
 
         // maximumDateIsReached
-        private isMaximumDateCheck(date: Date): boolean {
+        private isAboveMaximumDateCheck(date: Date): boolean {
             return this.options.maximumDate ? this.hdMoment(this.options.maximumDate).isBefore(date, 'day') : false
         }
 
@@ -99,8 +99,8 @@ export namespace HeadlessDatepicker {
             const day = date.getDay()
             const month = date.getMonth()
 
-            const isMinimum = this.isMinimumDateCheck(date)
-            const isMaximum = this.isMaximumDateCheck(date)
+            const isMinimum = this.isBelowMinimumDateCheck(date)
+            const isMaximum = this.isAboveMaximumDateCheck(date)
             const isDisabled = this.isDisabledCheck(date)
             const isActive = !isMinimum && !isMaximum && !isDisabled
             return {
@@ -108,8 +108,8 @@ export namespace HeadlessDatepicker {
                 isActive: isActive,
                 isToday: momentDate.isSame(new Date(), 'day'), 
                 isSelected: this.isSelectedCheck(date),
-                isMinimumDate: isMinimum,
-                isMaximumDate: isMaximum,
+                isBelowMinimumDate: isMinimum,
+                isAboveMaximumDate: isMaximum,
                 isDisabled: isDisabled,
                 isAdjacent: isAdjacent,
                 extras: this.attachExtras(date)
@@ -310,11 +310,11 @@ export namespace HeadlessDatepicker {
         isActive: boolean,
         isToday: boolean,
         isSelected: boolean,
-        isMinimumDate: boolean,
-        isMaximumDate: boolean,
+        isBelowMinimumDate: boolean,
+        isAboveMaximumDate: boolean,
         isDisabled: boolean,
         isAdjacent: boolean,
-        extras: any
+        extras: ExtraInfo[]
     }
 
     export interface CalendarMonth {

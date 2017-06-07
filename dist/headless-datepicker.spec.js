@@ -95,13 +95,13 @@ describe('Headless datepicker', () => {
             });
             it('should have minimum date and above marked as active', () => {
                 datepickerResult.slice(9).forEach((item) => {
-                    chai_1.assert.isFalse(item.isMinimumDate, `Expected isMinimumDate to be false for date ${item.date}`);
+                    chai_1.assert.isFalse(item.isBelowMinimumDate, `Expected isBelowMinimumDate to be false for date ${item.date}`);
                     chai_1.assert.isTrue(item.isActive, `Expected active to be true for date ${item.date}`);
                 });
             });
             it('should have dates below minimum marked as inactive', () => {
                 datepickerResult.slice(0, 9).forEach((item) => {
-                    chai_1.assert.isTrue(item.isMinimumDate, `Expected isMinimumDate to be true for date ${item.date}`);
+                    chai_1.assert.isTrue(item.isBelowMinimumDate, `Expected isBelowMinimumDate to be true for date ${item.date}`);
                     chai_1.assert.isFalse(item.isActive, `Expected active to be false for date ${item.date}`);
                 });
             });
@@ -117,13 +117,13 @@ describe('Headless datepicker', () => {
             });
             it('should have maximum date and dates below marked as active', () => {
                 datepickerResult.slice(0, 10).forEach((item) => {
-                    chai_1.assert.isFalse(item.isMaximumDate, `Expected isMaximumDate to be false for date ${item.date}`);
+                    chai_1.assert.isFalse(item.isAboveMaximumDate, `Expected isAboveMaximumDate to be false for date ${item.date}`);
                     chai_1.assert.isTrue(item.isActive, `Expected active to be true for date ${item.date}`);
                 });
             });
             it('should have dates above maximum marked marked as inactive', () => {
                 datepickerResult.slice(10).forEach((item) => {
-                    chai_1.assert.isTrue(item.isMaximumDate, `Expected isMaximumDate to be true for date ${item.date}`);
+                    chai_1.assert.isTrue(item.isAboveMaximumDate, `Expected isAboveMaximumDate to be true for date ${item.date}`);
                     chai_1.assert.isFalse(item.isActive, `Expected active to be false for date ${item.date}`);
                 });
             });

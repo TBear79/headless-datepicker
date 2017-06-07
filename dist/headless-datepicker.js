@@ -55,11 +55,11 @@ var HeadlessDatepicker;
             return typeof found !== 'undefined';
         }
         // minimumDateIsReached
-        isMinimumDateCheck(date) {
+        isBelowMinimumDateCheck(date) {
             return this.options.minimumDate ? this.hdMoment(this.options.minimumDate).isAfter(date, 'day') : false;
         }
         // maximumDateIsReached
-        isMaximumDateCheck(date) {
+        isAboveMaximumDateCheck(date) {
             return this.options.maximumDate ? this.hdMoment(this.options.maximumDate).isBefore(date, 'day') : false;
         }
         // dateIsDisabled
@@ -75,8 +75,8 @@ var HeadlessDatepicker;
             const momentDate = this.hdMoment(date);
             const day = date.getDay();
             const month = date.getMonth();
-            const isMinimum = this.isMinimumDateCheck(date);
-            const isMaximum = this.isMaximumDateCheck(date);
+            const isMinimum = this.isBelowMinimumDateCheck(date);
+            const isMaximum = this.isAboveMaximumDateCheck(date);
             const isDisabled = this.isDisabledCheck(date);
             const isActive = !isMinimum && !isMaximum && !isDisabled;
             return {
@@ -84,8 +84,8 @@ var HeadlessDatepicker;
                 isActive: isActive,
                 isToday: momentDate.isSame(new Date(), 'day'),
                 isSelected: this.isSelectedCheck(date),
-                isMinimumDate: isMinimum,
-                isMaximumDate: isMaximum,
+                isBelowMinimumDate: isMinimum,
+                isAboveMaximumDate: isMaximum,
                 isDisabled: isDisabled,
                 isAdjacent: isAdjacent,
                 extras: this.attachExtras(date)
