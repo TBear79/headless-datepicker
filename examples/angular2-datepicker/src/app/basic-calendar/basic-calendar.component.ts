@@ -8,7 +8,7 @@ import * as moment from 'moment'
   styleUrls: ['./basic-calendar.component.css']
 })
 export class BasicCalendarComponent implements OnInit {
-  headlessDatepicker: HeadlessDatepicker.Calendar
+  calendar: HeadlessDatepicker.Calendar
     
   @Input() mode: HeadlessDatepicker.CalendarMode
 
@@ -23,12 +23,12 @@ export class BasicCalendarComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.headlessDatepicker = new HeadlessDatepicker.Calendar({ minimumDate: this.minimumDate, maximumDate: this.maximumDate, disabledDates: this.disabledDates, extras: this.extras })
+    this.calendar = new HeadlessDatepicker.Calendar({ calendarMode: this.mode, minimumDate: this.minimumDate, maximumDate: this.maximumDate, disabledDates: this.disabledDates, extras: this.extras })
 
-    this.headlessDatepicker.selectedDates = this.selectedDates
+    this.calendar.selectedDates = this.selectedDates
 
     const currentDate = new Date()
-    this.model = this.headlessDatepicker.getMonth({ year: currentDate.getFullYear(), month: currentDate.getMonth() }, this.mode)
+    this.model = this.calendar.getMonth({ year: currentDate.getFullYear(), month: currentDate.getMonth() })
   }
 
   selectDate(selectedDate: moment.Moment) {
@@ -38,13 +38,13 @@ export class BasicCalendarComponent implements OnInit {
   previousMonth(year: number, month: number) {
     const momentDate = moment(new Date(year, month, 1))
     momentDate.subtract(1, 'month')
-    this.model = this.headlessDatepicker.getMonth({ year: momentDate.year(), month: momentDate.month() }, this.mode)
+    this.model = this.calendar.getMonth({ year: momentDate.year(), month: momentDate.month() })
   }
 
   nextMonth(year: number, month: number) {
     const momentDate = moment(new Date(year, month, 1))
     momentDate.add(1, 'month')
-    this.model = this.headlessDatepicker.getMonth({ year: momentDate.year(), month: momentDate.month() }, this.mode)
+    this.model = this.calendar.getMonth({ year: momentDate.year(), month: momentDate.month() })
   }
 
   formattedDates(dates: Date[]) {

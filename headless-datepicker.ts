@@ -44,14 +44,14 @@ export namespace HeadlessDatepicker {
 
             const weeks = this.getWeeks(range, this.options.calendarMode)
 
-            const calendar = {
+            const month = {
                 weekDayInfo: weekDays,
                 year: yearMonthPair.year,
                 monthInfo: this.getMonthNames(range, this.monthOffset),
                 weeks: weeks
             }
 
-            return calendar
+            return month
         }
 
         public getMonths(yearMonthPairs: YearMonthPair[]): CalendarMonth[] {
@@ -114,6 +114,15 @@ export namespace HeadlessDatepicker {
                 isAdjacent: isAdjacent,
                 extras: this.attachExtras(date)
             }
+        }
+
+        private createWeekItem(weekDates: DateItem[]): WeekItem {
+            const firstDate = weekDates[0]
+            return   {
+                    weekOfYear: firstDate.moment.week(),
+                    weekOfMonth: Math.ceil(firstDate.moment.date() / 7),
+                    dates: weekDates
+                }
         }
 
         private addDay(date: Date): Date {
@@ -200,8 +209,8 @@ export namespace HeadlessDatepicker {
             return lastDayInLastWeek.moment.week()
         }
 
-        private splitIntoWeeks(range: DateItem[]): DateItem[][] {
-            const weeks = []
+        private splitIntoWeeks(range: DateItem[]): WeekItem[] {
+            const weeks: WeekItem[] = []
 
             let startWeekNumber = range[0].moment.week()
             let endWeekNumber = range[range.length - 1].moment.week()
@@ -215,48 +224,49 @@ export namespace HeadlessDatepicker {
 
             for (var i = startWeekNumber; i <= endWeekNumber; i++) {
                 const compareWeek = newYear && i == endWeekNumber ? 1 : i
-
-                weeks.push(range.filter(function (r) { return r.moment.week() == compareWeek }))
+                const weekDates: DateItem[] = range.filter(function (r) { return r.moment.week() == compareWeek });
+                weeks.push(this.createWeekItem(weekDates))
             }
+
 
             return weeks
         }
 
-        private exactMode(range: DateItem[]): DateItem[][] {
+        private exactMode(range: DateItem[]): WeekItem[] {
             return this.splitIntoWeeks(range)
         }
 
-        private fillMode(range: DateItem[], showAdjacentMonths: boolean): DateItem[][] {
+        private fillMode(range: DateItem[], showAdjacentMonths: boolean): WeekItem[] {
             var weeks = this.splitIntoWeeks(range)
             var lastWeekIndex = weeks.length - 1
 
-            weeks[0] = this.getAdjacentBefore(range[0].moment, showAdjacentMonths).concat(weeks[0])
+            weeks[0].dates = this.getAdjacentBefore(range[0].moment, showAdjacentMonths).concat(weeks[0].dates)
 
-            weeks[lastWeekIndex] = weeks[lastWeekIndex].concat(this.getAdjacentAfter(range[range.length - 1].moment, showAdjacentMonths))
+            weeks[lastWeekIndex].dates = weeks[lastWeekIndex].dates.concat(this.getAdjacentAfter(range[range.length - 1].moment, showAdjacentMonths))
 
             return weeks
         }
 
-        private adjacentMode(range: DateItem[]): DateItem[][] {
+        private adjacentMode(range: DateItem[]): WeekItem[] {
             return this.fillMode(range, true)
         }
 
-        private fixedMode(range: DateItem[]): DateItem[][] {
+        private fixedMode(range: DateItem[]): WeekItem[] {
             const weeks = this.adjacentMode(range)
             while (weeks.length < 6) {
-                const lastDay = weeks[weeks.length - 1].slice(-1)[0].moment.clone()
+                const lastDay = weeks[weeks.length - 1].dates.slice(-1)[0].moment.clone()
                 const nextDay = lastDay.add(1, 'day')
                 const newWeek = this.getAdjacentAfter(nextDay, true)
 
                 // getAdjacentAfter only works with dates AFTER the the date passed. So we have to place the new date at the beginning
                 newWeek.unshift(this.createAdjacentDateEntry(nextDay, true))
 
-                weeks.push(newWeek)
+                weeks.push(this.createWeekItem(newWeek))
             }
             return weeks
         }
 
-        private getWeeks(range: DateItem[], mode: CalendarMode): DateItem[][] {
+        private getWeeks(range: DateItem[], mode: CalendarMode): WeekItem[] {
             const showAdjacentMonths = false
 
             switch (mode) {
@@ -286,6 +296,12 @@ export namespace HeadlessDatepicker {
         zeroBasedMonth?: boolean
     }
 
+    export interface WeekItem {
+        weekOfYear: number,
+        weekOfMonth: number,
+        dates: DateItem[]
+    }
+
     export interface DateItem {
         moment: moment.Moment,
         isActive: boolean,
@@ -302,7 +318,7 @@ export namespace HeadlessDatepicker {
         weekDayInfo: WeekDayInfo
         year: number
         monthInfo: MonthInfo
-        weeks: DateItem[][]
+        weeks: WeekItem[]
     }
 
     export interface WeekDayInfo {

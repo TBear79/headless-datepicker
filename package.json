@@ -4,6 +4,7 @@
   "description": "Provides the logic for a datepicker. Apply your own UI on top.",
   "main": "dist/headless-datepicker.js",
   "scripts": {
+    "start": "tsc --watch",
     "test": "mocha dist/headless-datepicker.spec.js",
     "test:watch": "mocha dist/headless-datepicker.spec.js -w"
   },

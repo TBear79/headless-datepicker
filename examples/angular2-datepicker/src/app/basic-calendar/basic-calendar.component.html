@@ -12,17 +12,17 @@
       </table>
     </th>
   </tr>
-  <tr *ngFor="let days of model.weeks">
-    <td *ngFor="let day of days">
-      <div *ngIf="day !== null">
-        <a *ngIf="!day.isAdjacent && day.isActive" class="link" [ngClass]="{ 'today': day.isToday, 'selected': day.isSelected, 'minimum': day.isMinimumDate, 'maximum': day.isMaximumDate, 'not-active': !day.isActive }" (click)="selectDate(day.moment)">
-          {{day.moment.format('DD')}}
+  <tr *ngFor="let week of model.weeks">
+    <td *ngFor="let date of week.dates">
+      <div *ngIf="date !== null">
+        <a *ngIf="!date.isAdjacent && date.isActive" class="link" [ngClass]="{ 'today': date.isToday, 'selected': date.isSelected, 'minimum': date.isMinimumDate, 'maximum': date.isMaximumDate, 'not-active': !date.isActive }" (click)="selectDate(date.moment)">
+          {{date.moment.format('DD')}}
         </a>
-        <div *ngIf="(!day.isActive || day.isAdjacent)" [ngClass]="{ 'today': day.isToday, 'selected': day.isSelected, 'minimum': day.isMinimumDate, 'maximum': day.isMaximumDate, 'not-active': !day.isActive }">
-          {{day.moment.format('DD')}}
+        <div *ngIf="(!date.isActive || date.isAdjacent)" [ngClass]="{ 'today': date.isToday, 'selected': date.isSelected, 'minimum': date.isMinimumDate, 'maximum': date.isMaximumDate, 'not-active': !date.isActive }">
+          {{date.moment.format('DD')}}
         </div>
-        <div *ngIf="day.extras !== null">
-          {{day.extras}}
+        <div *ngIf="date.extras !== null">
+          {{date.extras}}
         </div>
       </div>
     </td>

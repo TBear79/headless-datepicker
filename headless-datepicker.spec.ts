@@ -237,26 +237,36 @@ describe('Headless datepicker', () => {
 				sut = new HeadlessDatepicker.Calendar({ zeroBasedMonth: true, calendarMode: 'exact' })
 				calendar = sut.getMonth(yearMonthPair)
 				expect(calendar.monthInfo.number).to.equal(4)
-				expect(calendar.weeks[0][0].moment.format('MMMM')).to.equal('May')
+				expect(calendar.weeks[0].dates[0].moment.format('MMMM')).to.equal('May')
 				expect(calendar.monthInfo.full).to.equal('May')
 				expect(calendar.monthInfo.short).to.equal('May')
 			})
 
 			it('should respect one based months', () => {
 				expect(calendar.monthInfo.number).to.equal(4)
-				expect(calendar.weeks[0][0].moment.format('MMMM')).to.equal('April')
+				expect(calendar.weeks[0].dates[0].moment.format('MMMM')).to.equal('April')
 				expect(calendar.monthInfo.full).to.equal('April')
 				expect(calendar.monthInfo.short).to.equal('Apr')
 				
 			})
 
 			it('should return correct number of days for each week', function () {
-				expect(calendar.weeks[0].length).to.equal(1)
-				expect(calendar.weeks[1].length).to.equal(7)
-				expect(calendar.weeks[2].length).to.equal(7)
-				expect(calendar.weeks[3].length).to.equal(7)
-				expect(calendar.weeks[4].length).to.equal(7)
-				expect(calendar.weeks[5].length).to.equal(1)
+				expect(calendar.weeks[0].dates.length).to.equal(1)
+				expect(calendar.weeks[1].dates.length).to.equal(7)
+				expect(calendar.weeks[2].dates.length).to.equal(7)
+				expect(calendar.weeks[3].dates.length).to.equal(7)
+				expect(calendar.weeks[4].dates.length).to.equal(7)
+				expect(calendar.weeks[5].dates.length).to.equal(1)
+			})
+
+			it('should return correct week of year', () => {
+				expect(calendar.weeks[0].weekOfYear).to.equal(13)
+				expect(calendar.weeks[4].weekOfYear).to.equal(17)
+			})
+
+			it('should return correct week of month', () => {
+				expect(calendar.weeks[0].weekOfMonth).to.equal(1)
+				expect(calendar.weeks[4].weekOfMonth).to.equal(4)
 			})
 		})
 
@@ -268,13 +278,13 @@ describe('Headless datepicker', () => {
 
 			it('should return 7 days in all weeks', () => {
 				calendar.weeks.forEach(week => {
-					assert.isTrue(week.length == 7, `Expected week to have 7 days: ${week}`)
+					assert.isTrue(week.dates.length == 7, `Expected week to have 7 days: ${week}`)
 				})
 			})
 
 			it('should not show adjacent months', () => {
-				const firstWeekDays = calendar.weeks[0].slice(0, 6)
-				const lastWeekDays = calendar.weeks[5].slice(1)
+				const firstWeekDays = calendar.weeks[0].dates.slice(0, 6)
+				const lastWeekDays = calendar.weeks[5].dates.slice(1)
 
 				expect(firstWeekDays).to.deep.equal([null, null, null, null, null, null])
 				expect(lastWeekDays).to.deep.equal([null, null, null, null, null, null])
@@ -288,16 +298,16 @@ describe('Headless datepicker', () => {
 			})
 
 			it('should show previous adjacent month', () => {
-				const days = calendar.weeks[0].slice(0, 6).map(week => week.moment.format('YYYY-MM-DD'))
+				const days = calendar.weeks[0].dates.slice(0, 6).map(week => week.moment.format('YYYY-MM-DD'))
 
-				expect(calendar.weeks[0][6].moment.format('YYYY-MM-DD')).to.equal('2017-04-01')
+				expect(calendar.weeks[0].dates[6].moment.format('YYYY-MM-DD')).to.equal('2017-04-01')
 				expect(days).to.deep.equal(['2017-03-26', '2017-03-27', '2017-03-28', '2017-03-29', '2017-03-30', '2017-03-31'])
 			})
 
 			it('should show next adjacent month', () => {
-				const days = calendar.weeks[5].slice(1).map(week => week.moment.format('YYYY-MM-DD'))
+				const days = calendar.weeks[5].dates.slice(1).map(week => week.moment.format('YYYY-MM-DD'))
 
-				expect(calendar.weeks[5][0].moment.format('YYYY-MM-DD')).to.equal('2017-04-30')
+				expect(calendar.weeks[5].dates[0].moment.format('YYYY-MM-DD')).to.equal('2017-04-30')
 				expect(days).to.deep.equal(['2017-05-01', '2017-05-02', '2017-05-03', '2017-05-04', '2017-05-05', '2017-05-06'])
 			})
 		})
@@ -311,11 +321,11 @@ describe('Headless datepicker', () => {
 			it('should show 6 weeks for month with 5 weeks', () => {
 				yearMonthPair.month = 3
 				calendar = sut.getMonth(yearMonthPair)
-				expect(calendar.weeks.slice(-1)[0].map(item => item.moment.format('YYYY-MM-DD'))).to.deep.equal(['2017-04-02', '2017-04-03', '2017-04-04', '2017-04-05', '2017-04-06', '2017-04-07', '2017-04-08'])
+				expect(calendar.weeks.slice(-1)[0].dates.map(item => item.moment.format('YYYY-MM-DD'))).to.deep.equal(['2017-04-02', '2017-04-03', '2017-04-04', '2017-04-05', '2017-04-06', '2017-04-07', '2017-04-08'])
 			})
 
 			it('should show 6 weeks for month with 6 weeks', () => {
-				expect(calendar.weeks.slice(-1)[0].map(item => item.moment.format('YYYY-MM-DD'))).to.deep.equal(['2017-04-30', '2017-05-01', '2017-05-02', '2017-05-03', '2017-05-04', '2017-05-05', '2017-05-06'])
+				expect(calendar.weeks.slice(-1)[0].dates.map(item => item.moment.format('YYYY-MM-DD'))).to.deep.equal(['2017-04-30', '2017-05-01', '2017-05-02', '2017-05-03', '2017-05-04', '2017-05-05', '2017-05-06'])
 			})
 		})
 	})
@@ -352,9 +362,6 @@ describe('Headless datepicker', () => {
 
 			sut = new HeadlessDatepicker.Calendar({ calendarMode: 'exact', zeroBasedMonth: false })
 			calendars = sut.getMonths(months)
-
-			const reduceFn = (a, b) => a.concat(b)
-
 
 			expect(calendars[0].weeks.reduce(reduceFn).length).to.equal(29)
 			expect(calendars[1].weeks.reduce(reduceFn).length).to.equal(31)
@@ -412,17 +419,21 @@ describe('Headless datepicker', () => {
 
 	describe('Bug fixes', () => {
 		it('should return calendar for December 2018', () => {
-			sut = new HeadlessDatepicker.Calendar({ calendarMode: 'exact', zeroBasedMonth: true })
+			sut = new HeadlessDatepicker.Calendar({ calendarMode: 'exact' })
 			const calendar = sut.getMonth({ year: 2018, month: 12 })
 
 			expect(calendar).not.to.be.null
-			expect(calendar.weeks.reduce((a, b) => a.concat(b)).length).to.equal(31)
+			expect(calendar.monthInfo.number).to.equal(12)
+			expect(calendar.weeks[0].weekOfYear).to.equal(48)
+			expect(calendar.weeks[0].weekOfMonth).to.equal(1)
+			expect(calendar.weeks.reduce(reduceFn).length).to.equal(31)
 		})
 	})
 })
 
+const reduceFn = (a, b) =>  a.dates? a.dates.concat(b.dates) : a.concat(b.dates)
 
-let da = {
+const da = {
 	months: "januar_februar_marts_april_maj_juni_juli_august_september_oktober_november_december".split("_"),
 	monthsShort: "jan_feb_mar_apr_maj_jun_jul_aug_sep_okt_nov_dec".split("_"),
 	weekdays: "søndag_mandag_tirsdag_onsdag_torsdag_fredag_lørdag".split("_"),
