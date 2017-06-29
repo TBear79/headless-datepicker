@@ -45,9 +45,9 @@ export namespace HeadlessDatepicker {
             const weeks = this.getWeeks(range, this.options.calendarMode)
 
             const month = {
-                weekDayInfo: weekDays,
+                weekDayName: weekDays,
                 year: yearMonthPair.year,
-                monthInfo: this.getMonthNames(range, this.monthOffset),
+                monthName: this.getMonthNames(range, this.monthOffset),
                 weeks: weeks
             }
 
@@ -135,7 +135,7 @@ export namespace HeadlessDatepicker {
             return showAdjacentMonths ? this.createHdpDate(momentDate.toDate(), true) : null
         }
 
-        private getWeekDays(range: DateItem[]): WeekDayInfo {
+        private getWeekDays(range: DateItem[]): WeekDayName {
             const weekDays = {
                 full: [],
                 short: [],
@@ -157,7 +157,7 @@ export namespace HeadlessDatepicker {
             return weekDays
         }
 
-        private getMonthNames(range: DateItem[], monthOffset: number): MonthInfo {
+        private getMonthNames(range: DateItem[], monthOffset: number): MonthName {
             
             const firstDayOfMonth = range.find((item) => {
                 return item && item.isAdjacent == false
@@ -316,19 +316,19 @@ export namespace HeadlessDatepicker {
     }
 
     export interface CalendarMonth {
-        weekDayInfo: WeekDayInfo
+        weekDayName: WeekDayName
         year: number
-        monthInfo: MonthInfo
+        monthName: MonthName
         weeks: WeekItem[]
     }
 
-    export interface WeekDayInfo {
+    export interface WeekDayName {
         full: string[]
         short: string[]
         min: string[]
     }
 
-    export interface MonthInfo {
+    export interface MonthName {
         number: number
         full: string
         short: string

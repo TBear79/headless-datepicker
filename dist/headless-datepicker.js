@@ -33,9 +33,9 @@ var HeadlessDatepicker;
             const weekDays = this.getWeekDays(range);
             const weeks = this.getWeeks(range, this.options.calendarMode);
             const month = {
-                weekDayInfo: weekDays,
+                weekDayName: weekDays,
                 year: yearMonthPair.year,
-                monthInfo: this.getMonthNames(range, this.monthOffset),
+                monthName: this.getMonthNames(range, this.monthOffset),
                 weeks: weeks
             };
             return month;

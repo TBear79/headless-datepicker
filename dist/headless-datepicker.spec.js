@@ -183,23 +183,23 @@ describe('Headless datepicker', () => {
                 chai_1.expect(calendar.weeks.length).to.equal(6);
             });
             it('should return correct week day names in correct order', () => {
-                chai_1.expect(calendar.weekDayInfo.full).to.deep.equal(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']);
-                chai_1.expect(calendar.weekDayInfo.short).to.deep.equal(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']);
-                chai_1.expect(calendar.weekDayInfo.min).to.deep.equal(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']);
+                chai_1.expect(calendar.weekDayName.full).to.deep.equal(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']);
+                chai_1.expect(calendar.weekDayName.short).to.deep.equal(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']);
+                chai_1.expect(calendar.weekDayName.min).to.deep.equal(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']);
             });
             it('should respect zero based months', () => {
                 sut = new headless_datepicker_1.HeadlessDatepicker.Calendar({ zeroBasedMonth: true, calendarMode: 'exact' });
                 calendar = sut.getMonth(yearMonthPair);
-                chai_1.expect(calendar.monthInfo.number).to.equal(4);
+                chai_1.expect(calendar.monthName.number).to.equal(4);
                 chai_1.expect(calendar.weeks[0].dates[0].moment.format('MMMM')).to.equal('May');
-                chai_1.expect(calendar.monthInfo.full).to.equal('May');
-                chai_1.expect(calendar.monthInfo.short).to.equal('May');
+                chai_1.expect(calendar.monthName.full).to.equal('May');
+                chai_1.expect(calendar.monthName.short).to.equal('May');
             });
             it('should respect one based months', () => {
-                chai_1.expect(calendar.monthInfo.number).to.equal(4);
+                chai_1.expect(calendar.monthName.number).to.equal(4);
                 chai_1.expect(calendar.weeks[0].dates[0].moment.format('MMMM')).to.equal('April');
-                chai_1.expect(calendar.monthInfo.full).to.equal('April');
-                chai_1.expect(calendar.monthInfo.short).to.equal('Apr');
+                chai_1.expect(calendar.monthName.full).to.equal('April');
+                chai_1.expect(calendar.monthName.short).to.equal('Apr');
             });
             it('should return correct number of days for each week', function () {
                 chai_1.expect(calendar.weeks[0].dates.length).to.equal(1);
@@ -327,14 +327,14 @@ describe('Headless datepicker', () => {
             chai_1.expect(dates[0].moment.weekday()).to.equal(6);
             chai_1.expect(dates[1].moment.weekday()).to.equal(0);
             chai_1.expect(dates[2].moment.weekday()).to.equal(1);
-            chai_1.expect(calendar.weekDayInfo.min).to.deep.equal(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']);
+            chai_1.expect(calendar.weekDayName.min).to.deep.equal(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']);
             sut = new headless_datepicker_1.HeadlessDatepicker.Calendar({ locale: 'da', localeSettings: da });
             dates = sut.getRange(new Date(2017, 3, 1), new Date(2017, 3, 3));
             calendar = sut.getMonth(pair);
             chai_1.expect(dates[0].moment.weekday()).to.equal(5);
             chai_1.expect(dates[1].moment.weekday()).to.equal(6);
             chai_1.expect(dates[2].moment.weekday()).to.equal(0);
-            chai_1.expect(calendar.weekDayInfo.min).to.deep.equal(['ma', 'ti', 'on', 'to', 'fr', 'lø', 'sø']);
+            chai_1.expect(calendar.weekDayName.min).to.deep.equal(['ma', 'ti', 'on', 'to', 'fr', 'lø', 'sø']);
         });
     });
     describe('Bug fixes', () => {
@@ -342,7 +342,7 @@ describe('Headless datepicker', () => {
             sut = new headless_datepicker_1.HeadlessDatepicker.Calendar({ calendarMode: 'exact' });
             const calendar = sut.getMonth({ year: 2018, month: 12 });
             chai_1.expect(calendar).not.to.be.null;
-            chai_1.expect(calendar.monthInfo.number).to.equal(12);
+            chai_1.expect(calendar.monthName.number).to.equal(12);
             chai_1.expect(calendar.weeks[0].weekOfYear).to.equal(48);
             chai_1.expect(calendar.weeks[0].weekOfMonth).to.equal(1);
             chai_1.expect(calendar.weeks.reduce(reduceFn).length).to.equal(31);
