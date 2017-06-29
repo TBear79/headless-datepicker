@@ -5,9 +5,9 @@
     <th colspan="10">
       <table class="header-table">
         <tr>
-          <td class="prev"><a class="link" (click)="previousMonth(model.year, model.monthInfo.number)">Previous</a></td>
-          <td>{{model.monthInfo.full}} {{model.year}}</td>
-          <td class="next"><a class="link" (click)="nextMonth(model.year, model.monthInfo.number)">Next</a></td>
+          <td class="prev"><a class="link" (click)="previousMonth(model.year, model.number)">Previous</a></td>
+          <td>{{model.monthName.full}} {{model.year}}</td>
+          <td class="next"><a class="link" (click)="nextMonth(model.year, model.number)">Next</a></td>
         </tr>
       </table>
     </th>
@@ -15,10 +15,10 @@
   <tr *ngFor="let week of model.weeks">
     <td *ngFor="let date of week.dates">
       <div *ngIf="date !== null">
-        <a *ngIf="!date.isAdjacent && date.isActive" class="link" [ngClass]="{ 'today': date.isToday, 'selected': date.isSelected, 'minimum': date.isMinimumDate, 'maximum': date.isMaximumDate, 'not-active': !date.isActive }" (click)="selectDate(date.moment)">
+        <a *ngIf="!date.isAdjacent && date.isActive" class="link" [ngClass]="{ 'today': date.isToday, 'selected': date.isSelected, 'minimum': date.isBelowMinimumDate, 'maximum': date.isAboveMaximumDate, 'not-active': !date.isActive }" (click)="selectDate(date.moment)">
           {{date.moment.format('DD')}}
         </a>
-        <div *ngIf="(!date.isActive || date.isAdjacent)" [ngClass]="{ 'today': date.isToday, 'selected': date.isSelected, 'minimum': date.isMinimumDate, 'maximum': date.isMaximumDate, 'not-active': !date.isActive }">
+        <div *ngIf="(!date.isActive || date.isAdjacent)" [ngClass]="{ 'today': date.isToday, 'selected': date.isSelected, 'minimum': date.isBelowMinimumDate, 'maximum': date.isAboveMaximumDate, 'not-active': !date.isActive }">
           {{date.moment.format('DD')}}
         </div>
         <div *ngIf="date.extras !== null">

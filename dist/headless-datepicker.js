@@ -32,16 +32,23 @@ var HeadlessDatepicker;
             const range = this.getRange(startDate, endDate);
             const weekDays = this.getWeekDays(range);
             const weeks = this.getWeeks(range, this.options.calendarMode);
+            const firstDayOfMonth = this.getFirstDayOfMonthFromRange(range);
             const month = {
-                weekDayInfo: weekDays,
+                weekDayName: weekDays,
                 year: yearMonthPair.year,
-                monthInfo: this.getMonthNames(range, this.monthOffset),
+                number: firstDayOfMonth.moment.month() + this.monthOffset,
+                monthName: this.getMonthNames(firstDayOfMonth),
                 weeks: weeks
             };
             return month;
         }
         getMonths(yearMonthPairs) {
             return yearMonthPairs.map((item) => { return this.getMonth({ year: item.year, month: item.month }); });
+        }
+        getFirstDayOfMonthFromRange(range) {
+            return range.find((item) => {
+                return item && item.isAdjacent == false;
+            });
         }
         // createMomentDay
         hdMoment(date) {
@@ -55,11 +62,11 @@ var HeadlessDatepicker;
             return typeof found !== 'undefined';
         }
         // minimumDateIsReached
-        isMinimumDateCheck(date) {
+        isBelowMinimumDateCheck(date) {
             return this.options.minimumDate ? this.hdMoment(this.options.minimumDate).isAfter(date, 'day') : false;
         }
         // maximumDateIsReached
-        isMaximumDateCheck(date) {
+        isAboveMaximumDateCheck(date) {
             return this.options.maximumDate ? this.hdMoment(this.options.maximumDate).isBefore(date, 'day') : false;
         }
         // dateIsDisabled
@@ -75,8 +82,8 @@ var HeadlessDatepicker;
             const momentDate = this.hdMoment(date);
             const day = date.getDay();
             const month = date.getMonth();
-            const isMinimum = this.isMinimumDateCheck(date);
-            const isMaximum = this.isMaximumDateCheck(date);
+            const isMinimum = this.isBelowMinimumDateCheck(date);
+            const isMaximum = this.isAboveMaximumDateCheck(date);
             const isDisabled = this.isDisabledCheck(date);
             const isActive = !isMinimum && !isMaximum && !isDisabled;
             return {
@@ -84,8 +91,8 @@ var HeadlessDatepicker;
                 isActive: isActive,
                 isToday: momentDate.isSame(new Date(), 'day'),
                 isSelected: this.isSelectedCheck(date),
-                isMinimumDate: isMinimum,
-                isMaximumDate: isMaximum,
+                isBelowMinimumDate: isMinimum,
+                isAboveMaximumDate: isMaximum,
                 isDisabled: isDisabled,
                 isAdjacent: isAdjacent,
                 extras: this.attachExtras(date)
@@ -124,13 +131,8 @@ var HeadlessDatepicker;
             }
             return weekDays;
         }
-        getMonthNames(range, monthOffset) {
-            const firstDayOfMonth = range.find((item) => {
-                return item && item.isAdjacent == false;
-            });
-            console.log('GETMONTHNAMES', firstDayOfMonth);
+        getMonthNames(firstDayOfMonth) {
             return {
-                number: firstDayOfMonth.moment.month() + monthOffset,
                 full: firstDayOfMonth.moment.format('MMMM'),
                 short: firstDayOfMonth.moment.format('MMM')
             };

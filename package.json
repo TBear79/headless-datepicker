@@ -17,7 +17,7 @@
     "calendar"
   ],
   "author": "Thorbjørn Jelgren (www.therightfoot.dk)",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@types/chai": "^3.5.2",
     "@types/mocha": "^2.2.41",

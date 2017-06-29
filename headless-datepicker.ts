@@ -34,7 +34,7 @@ export namespace HeadlessDatepicker {
             return dates
         }
 
-        public getMonth(yearMonthPair: YearMonthPair): CalendarMonth {
+        public getMonth(yearMonthPair: YearMonthPair): MonthItem {
             const startDate = this.hdMoment().year(yearMonthPair.year).month(yearMonthPair.month - this.monthOffset).date(1).toDate()
             const endDate = this.hdMoment().year(yearMonthPair.year).month(yearMonthPair.month - this.monthOffset).add(1, 'months').date(0).toDate()
 
@@ -44,18 +44,27 @@ export namespace HeadlessDatepicker {
 
             const weeks = this.getWeeks(range, this.options.calendarMode)
 
+            const firstDayOfMonth = this.getFirstDayOfMonthFromRange(range);
+
             const month = {
-                weekDayInfo: weekDays,
+                weekDayName: weekDays,
                 year: yearMonthPair.year,
-                monthInfo: this.getMonthNames(range, this.monthOffset),
+                number: firstDayOfMonth.moment.month() + this.monthOffset,
+                monthName: this.getMonthNames(firstDayOfMonth),
                 weeks: weeks
             }
 
             return month
         }
 
-        public getMonths(yearMonthPairs: YearMonthPair[]): CalendarMonth[] {
+        public getMonths(yearMonthPairs: YearMonthPair[]): MonthItem[] {
             return yearMonthPairs.map((item) => { return this.getMonth({ year: item.year, month: item.month }) })
+        }
+
+        private getFirstDayOfMonthFromRange(range: DateItem[]): DateItem{
+            return range.find((item) => {
+                return item && item.isAdjacent == false
+            })
         }
 
         // createMomentDay
@@ -73,12 +82,12 @@ export namespace HeadlessDatepicker {
         }
 
         // minimumDateIsReached
-        private isMinimumDateCheck(date: Date): boolean {
+        private isBelowMinimumDateCheck(date: Date): boolean {
             return this.options.minimumDate ? this.hdMoment(this.options.minimumDate).isAfter(date, 'day') : false
         }
 
         // maximumDateIsReached
-        private isMaximumDateCheck(date: Date): boolean {
+        private isAboveMaximumDateCheck(date: Date): boolean {
             return this.options.maximumDate ? this.hdMoment(this.options.maximumDate).isBefore(date, 'day') : false
         }
 
@@ -99,8 +108,8 @@ export namespace HeadlessDatepicker {
             const day = date.getDay()
             const month = date.getMonth()
 
-            const isMinimum = this.isMinimumDateCheck(date)
-            const isMaximum = this.isMaximumDateCheck(date)
+            const isMinimum = this.isBelowMinimumDateCheck(date)
+            const isMaximum = this.isAboveMaximumDateCheck(date)
             const isDisabled = this.isDisabledCheck(date)
             const isActive = !isMinimum && !isMaximum && !isDisabled
             return {
@@ -108,8 +117,8 @@ export namespace HeadlessDatepicker {
                 isActive: isActive,
                 isToday: momentDate.isSame(new Date(), 'day'), 
                 isSelected: this.isSelectedCheck(date),
-                isMinimumDate: isMinimum,
-                isMaximumDate: isMaximum,
+                isBelowMinimumDate: isMinimum,
+                isAboveMaximumDate: isMaximum,
                 isDisabled: isDisabled,
                 isAdjacent: isAdjacent,
                 extras: this.attachExtras(date)
@@ -135,7 +144,7 @@ export namespace HeadlessDatepicker {
             return showAdjacentMonths ? this.createHdpDate(momentDate.toDate(), true) : null
         }
 
-        private getWeekDays(range: DateItem[]): WeekDayInfo {
+        private getWeekDays(range: DateItem[]): WeekDayName {
             const weekDays = {
                 full: [],
                 short: [],
@@ -157,16 +166,8 @@ export namespace HeadlessDatepicker {
             return weekDays
         }
 
-        private getMonthNames(range: DateItem[], monthOffset: number): MonthInfo {
-            
-            const firstDayOfMonth = range.find((item) => {
-                return item && item.isAdjacent == false
-            })
-
-            console.log('GETMONTHNAMES', firstDayOfMonth)
-
+        private getMonthNames(firstDayOfMonth: DateItem): MonthName {
             return {
-                number: firstDayOfMonth.moment.month() + monthOffset,
                 full: firstDayOfMonth.moment.format('MMMM'),
                 short: firstDayOfMonth.moment.format('MMM')
             }
@@ -310,28 +311,28 @@ export namespace HeadlessDatepicker {
         isActive: boolean,
         isToday: boolean,
         isSelected: boolean,
-        isMinimumDate: boolean,
-        isMaximumDate: boolean,
+        isBelowMinimumDate: boolean,
+        isAboveMaximumDate: boolean,
         isDisabled: boolean,
         isAdjacent: boolean,
         extras: any
     }
 
-    export interface CalendarMonth {
-        weekDayInfo: WeekDayInfo
+    export interface MonthItem {
+        weekDayName: WeekDayName
         year: number
-        monthInfo: MonthInfo
+        number: number
+        monthName: MonthName
         weeks: WeekItem[]
     }
 
-    export interface WeekDayInfo {
+    export interface WeekDayName {
         full: string[]
         short: string[]
         min: string[]
     }
 
-    export interface MonthInfo {
-        number: number
+    export interface MonthName {
         full: string
         short: string
     }

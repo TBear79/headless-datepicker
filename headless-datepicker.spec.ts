@@ -118,14 +118,14 @@ describe('Headless datepicker', () => {
 
 			it('should have minimum date and above marked as active', () => {
 				datepickerResult.slice(9).forEach((item) => {
-					assert.isFalse(item.isMinimumDate, `Expected isMinimumDate to be false for date ${item.date}`)
+					assert.isFalse(item.isBelowMinimumDate, `Expected isBelowMinimumDate to be false for date ${item.date}`)
 					assert.isTrue(item.isActive, `Expected active to be true for date ${item.date}`)
 				})
 			})
 
 			it('should have dates below minimum marked as inactive', () => {
 				datepickerResult.slice(0, 9).forEach((item) => {
-					assert.isTrue(item.isMinimumDate, `Expected isMinimumDate to be true for date ${item.date}`)
+					assert.isTrue(item.isBelowMinimumDate, `Expected isBelowMinimumDate to be true for date ${item.date}`)
 					assert.isFalse(item.isActive, `Expected active to be false for date ${item.date}`)
 				})
 			})
@@ -146,14 +146,14 @@ describe('Headless datepicker', () => {
 
 			it('should have maximum date and dates below marked as active', () => {
 				datepickerResult.slice(0, 10).forEach((item) => {
-					assert.isFalse(item.isMaximumDate, `Expected isMaximumDate to be false for date ${item.date}`)
+					assert.isFalse(item.isAboveMaximumDate, `Expected isAboveMaximumDate to be false for date ${item.date}`)
 					assert.isTrue(item.isActive, `Expected active to be true for date ${item.date}`)
 				})
 			})
 
 			it('should have dates above maximum marked marked as inactive', () => {
 				datepickerResult.slice(10).forEach((item) => {
-					assert.isTrue(item.isMaximumDate, `Expected isMaximumDate to be true for date ${item.date}`)
+					assert.isTrue(item.isAboveMaximumDate, `Expected isAboveMaximumDate to be true for date ${item.date}`)
 					assert.isFalse(item.isActive, `Expected active to be false for date ${item.date}`)
 				})
 			})
@@ -228,25 +228,25 @@ describe('Headless datepicker', () => {
 			})
 
 			it('should return correct week day names in correct order', () => {
-				expect(calendar.weekDayInfo.full).to.deep.equal(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'])
-				expect(calendar.weekDayInfo.short).to.deep.equal(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'])
-				expect(calendar.weekDayInfo.min).to.deep.equal(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'])
+				expect(calendar.weekDayName.full).to.deep.equal(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'])
+				expect(calendar.weekDayName.short).to.deep.equal(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'])
+				expect(calendar.weekDayName.min).to.deep.equal(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'])
 			})
 
 			it('should respect zero based months', () => {
 				sut = new HeadlessDatepicker.Calendar({ zeroBasedMonth: true, calendarMode: 'exact' })
 				calendar = sut.getMonth(yearMonthPair)
-				expect(calendar.monthInfo.number).to.equal(4)
+				expect(calendar.number).to.equal(4)
 				expect(calendar.weeks[0].dates[0].moment.format('MMMM')).to.equal('May')
-				expect(calendar.monthInfo.full).to.equal('May')
-				expect(calendar.monthInfo.short).to.equal('May')
+				expect(calendar.monthName.full).to.equal('May')
+				expect(calendar.monthName.short).to.equal('May')
 			})
 
 			it('should respect one based months', () => {
-				expect(calendar.monthInfo.number).to.equal(4)
+				expect(calendar.number).to.equal(4)
 				expect(calendar.weeks[0].dates[0].moment.format('MMMM')).to.equal('April')
-				expect(calendar.monthInfo.full).to.equal('April')
-				expect(calendar.monthInfo.short).to.equal('Apr')
+				expect(calendar.monthName.full).to.equal('April')
+				expect(calendar.monthName.short).to.equal('Apr')
 				
 			})
 
@@ -404,7 +404,7 @@ describe('Headless datepicker', () => {
 			expect(dates[0].moment.weekday()).to.equal(6)
 			expect(dates[1].moment.weekday()).to.equal(0)
 			expect(dates[2].moment.weekday()).to.equal(1)
-			expect(calendar.weekDayInfo.min).to.deep.equal(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'])
+			expect(calendar.weekDayName.min).to.deep.equal(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'])
 
 			sut = new HeadlessDatepicker.Calendar({ locale: 'da', localeSettings: da })
 
@@ -413,7 +413,7 @@ describe('Headless datepicker', () => {
 			expect(dates[0].moment.weekday()).to.equal(5)
 			expect(dates[1].moment.weekday()).to.equal(6)
 			expect(dates[2].moment.weekday()).to.equal(0)
-			expect(calendar.weekDayInfo.min).to.deep.equal(['ma', 'ti', 'on', 'to', 'fr', 'lø', 'sø'])
+			expect(calendar.weekDayName.min).to.deep.equal(['ma', 'ti', 'on', 'to', 'fr', 'lø', 'sø'])
 		})
 	})
 
@@ -423,7 +423,7 @@ describe('Headless datepicker', () => {
 			const calendar = sut.getMonth({ year: 2018, month: 12 })
 
 			expect(calendar).not.to.be.null
-			expect(calendar.monthInfo.number).to.equal(12)
+			expect(calendar.number).to.equal(12)
 			expect(calendar.weeks[0].weekOfYear).to.equal(48)
 			expect(calendar.weeks[0].weekOfMonth).to.equal(1)
 			expect(calendar.weeks.reduce(reduceFn).length).to.equal(31)
