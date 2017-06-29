@@ -27,8 +27,8 @@ export class BasicCalendarComponent implements OnInit {
 
     this.calendar.selectedDates = this.selectedDates
 
-    const currentDate = new Date()
-    this.model = this.calendar.getMonth({ year: currentDate.getFullYear(), month: currentDate.getMonth() })
+    const currentDate = moment()
+    this.model = this.calendar.getMonth({ year: currentDate.year(), month: currentDate.format('MM') })
   }
 
   selectDate(selectedDate: moment.Moment) {
@@ -36,15 +36,15 @@ export class BasicCalendarComponent implements OnInit {
   }
 
   previousMonth(year: number, month: number) {
-    const momentDate = moment(new Date(year, month, 1))
+    const momentDate = moment([year, month-1, 1])
     momentDate.subtract(1, 'month')
-    this.model = this.calendar.getMonth({ year: momentDate.year(), month: momentDate.month() })
+    this.model = this.calendar.getMonth({ year: momentDate.year(), month: momentDate.format('MM')})
   }
 
   nextMonth(year: number, month: number) {
-    const momentDate = moment(new Date(year, month, 1))
+    const momentDate = moment([year, month-1, 1])
     momentDate.add(1, 'month')
-    this.model = this.calendar.getMonth({ year: momentDate.year(), month: momentDate.month() })
+    this.model = this.calendar.getMonth({ year: momentDate.year(), month: Number(momentDate.format('MM')) })
   }
 
   formattedDates(dates: Date[]) {
