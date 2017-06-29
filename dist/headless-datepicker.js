@@ -32,13 +32,13 @@ var HeadlessDatepicker;
             const range = this.getRange(startDate, endDate);
             const weekDays = this.getWeekDays(range);
             const weeks = this.getWeeks(range, this.options.calendarMode);
-            const calendar = {
+            const month = {
                 weekDayInfo: weekDays,
                 year: yearMonthPair.year,
                 monthInfo: this.getMonthNames(range, this.monthOffset),
                 weeks: weeks
             };
-            return calendar;
+            return month;
         }
         getMonths(yearMonthPairs) {
             return yearMonthPairs.map((item) => { return this.getMonth({ year: item.year, month: item.month }); });
@@ -91,6 +91,14 @@ var HeadlessDatepicker;
                 extras: this.attachExtras(date)
             };
         }
+        createWeekItem(weekDates) {
+            const firstDate = weekDates[0];
+            return {
+                weekOfYear: firstDate.moment.week(),
+                weekOfMonth: Math.ceil(firstDate.moment.date() / 7),
+                dates: weekDates
+            };
+        }
         addDay(date) {
             const newDate = new Date(date);
             newDate.setDate(newDate.getDate() + 1);
@@ -120,6 +128,7 @@ var HeadlessDatepicker;
             const firstDayOfMonth = range.find((item) => {
                 return item && item.isAdjacent == false;
             });
+            console.log('GETMONTHNAMES', firstDayOfMonth);
             return {
                 number: firstDayOfMonth.moment.month() + monthOffset,
                 full: firstDayOfMonth.moment.format('MMMM'),
@@ -165,7 +174,8 @@ var HeadlessDatepicker;
             }
             for (var i = startWeekNumber; i <= endWeekNumber; i++) {
                 const compareWeek = newYear && i == endWeekNumber ? 1 : i;
-                weeks.push(range.filter(function (r) { return r.moment.week() == compareWeek; }));
+                const weekDates = range.filter(function (r) { return r.moment.week() == compareWeek; });
+                weeks.push(this.createWeekItem(weekDates));
             }
             return weeks;
         }
@@ -175,8 +185,8 @@ var HeadlessDatepicker;
         fillMode(range, showAdjacentMonths) {
             var weeks = this.splitIntoWeeks(range);
             var lastWeekIndex = weeks.length - 1;
-            weeks[0] = this.getAdjacentBefore(range[0].moment, showAdjacentMonths).concat(weeks[0]);
-            weeks[lastWeekIndex] = weeks[lastWeekIndex].concat(this.getAdjacentAfter(range[range.length - 1].moment, showAdjacentMonths));
+            weeks[0].dates = this.getAdjacentBefore(range[0].moment, showAdjacentMonths).concat(weeks[0].dates);
+            weeks[lastWeekIndex].dates = weeks[lastWeekIndex].dates.concat(this.getAdjacentAfter(range[range.length - 1].moment, showAdjacentMonths));
             return weeks;
         }
         adjacentMode(range) {
@@ -185,12 +195,12 @@ var HeadlessDatepicker;
         fixedMode(range) {
             const weeks = this.adjacentMode(range);
             while (weeks.length < 6) {
-                const lastDay = weeks[weeks.length - 1].slice(-1)[0].moment.clone();
+                const lastDay = weeks[weeks.length - 1].dates.slice(-1)[0].moment.clone();
                 const nextDay = lastDay.add(1, 'day');
                 const newWeek = this.getAdjacentAfter(nextDay, true);
                 // getAdjacentAfter only works with dates AFTER the the date passed. So we have to place the new date at the beginning
                 newWeek.unshift(this.createAdjacentDateEntry(nextDay, true));
-                weeks.push(newWeek);
+                weeks.push(this.createWeekItem(newWeek));
             }
             return weeks;
         }
