@@ -2,6 +2,11 @@
   "name": "headless-datepicker",
   "version": "1.0.0",
   "description": "Provides the logic for a datepicker. Apply your own UI on top.",
+  "repository" :
+  { 
+    "type" : "git",
+    "url" : "https://github.com/TBear79/headless-datepicker"
+  },
   "main": "dist/headless-datepicker.js",
   "scripts": {
     "start": "tsc --watch",
