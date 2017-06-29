@@ -34,7 +34,7 @@ export namespace HeadlessDatepicker {
             return dates
         }
 
-        public getMonth(yearMonthPair: YearMonthPair): CalendarMonth {
+        public getMonth(yearMonthPair: YearMonthPair): MonthItem {
             const startDate = this.hdMoment().year(yearMonthPair.year).month(yearMonthPair.month - this.monthOffset).date(1).toDate()
             const endDate = this.hdMoment().year(yearMonthPair.year).month(yearMonthPair.month - this.monthOffset).add(1, 'months').date(0).toDate()
 
@@ -57,7 +57,7 @@ export namespace HeadlessDatepicker {
             return month
         }
 
-        public getMonths(yearMonthPairs: YearMonthPair[]): CalendarMonth[] {
+        public getMonths(yearMonthPairs: YearMonthPair[]): MonthItem[] {
             return yearMonthPairs.map((item) => { return this.getMonth({ year: item.year, month: item.month }) })
         }
 
@@ -318,7 +318,7 @@ export namespace HeadlessDatepicker {
         extras: any
     }
 
-    export interface CalendarMonth {
+    export interface MonthItem {
         weekDayName: WeekDayName
         year: number
         number: number
