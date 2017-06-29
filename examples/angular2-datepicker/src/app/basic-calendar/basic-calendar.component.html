@@ -5,9 +5,9 @@
     <th colspan="10">
       <table class="header-table">
         <tr>
-          <td class="prev"><a class="link" (click)="previousMonth(model.year, model.monthInfo.number)">Previous</a></td>
-          <td>{{model.monthInfo.full}} {{model.year}}</td>
-          <td class="next"><a class="link" (click)="nextMonth(model.year, model.monthInfo.number)">Next</a></td>
+          <td class="prev"><a class="link" (click)="previousMonth(model.year, model.number)">Previous</a></td>
+          <td>{{model.monthName.full}} {{model.year}}</td>
+          <td class="next"><a class="link" (click)="nextMonth(model.year, model.number)">Next</a></td>
         </tr>
       </table>
     </th>
