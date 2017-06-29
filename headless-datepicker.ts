@@ -44,10 +44,13 @@ export namespace HeadlessDatepicker {
 
             const weeks = this.getWeeks(range, this.options.calendarMode)
 
+            const firstDayOfMonth = this.getFirstDayOfMonthFromRange(range);
+
             const month = {
                 weekDayName: weekDays,
                 year: yearMonthPair.year,
-                monthName: this.getMonthNames(range, this.monthOffset),
+                number: firstDayOfMonth.moment.month() + this.monthOffset,
+                monthName: this.getMonthNames(firstDayOfMonth),
                 weeks: weeks
             }
 
@@ -56,6 +59,12 @@ export namespace HeadlessDatepicker {
 
         public getMonths(yearMonthPairs: YearMonthPair[]): CalendarMonth[] {
             return yearMonthPairs.map((item) => { return this.getMonth({ year: item.year, month: item.month }) })
+        }
+
+        private getFirstDayOfMonthFromRange(range: DateItem[]): DateItem{
+            return range.find((item) => {
+                return item && item.isAdjacent == false
+            })
         }
 
         // createMomentDay
@@ -157,14 +166,8 @@ export namespace HeadlessDatepicker {
             return weekDays
         }
 
-        private getMonthNames(range: DateItem[], monthOffset: number): MonthName {
-            
-            const firstDayOfMonth = range.find((item) => {
-                return item && item.isAdjacent == false
-            })
-
+        private getMonthNames(firstDayOfMonth: DateItem): MonthName {
             return {
-                number: firstDayOfMonth.moment.month() + monthOffset,
                 full: firstDayOfMonth.moment.format('MMMM'),
                 short: firstDayOfMonth.moment.format('MMM')
             }
@@ -318,6 +321,7 @@ export namespace HeadlessDatepicker {
     export interface CalendarMonth {
         weekDayName: WeekDayName
         year: number
+        number: number
         monthName: MonthName
         weeks: WeekItem[]
     }
@@ -329,7 +333,6 @@ export namespace HeadlessDatepicker {
     }
 
     export interface MonthName {
-        number: number
         full: string
         short: string
     }

@@ -236,14 +236,14 @@ describe('Headless datepicker', () => {
 			it('should respect zero based months', () => {
 				sut = new HeadlessDatepicker.Calendar({ zeroBasedMonth: true, calendarMode: 'exact' })
 				calendar = sut.getMonth(yearMonthPair)
-				expect(calendar.monthName.number).to.equal(4)
+				expect(calendar.number).to.equal(4)
 				expect(calendar.weeks[0].dates[0].moment.format('MMMM')).to.equal('May')
 				expect(calendar.monthName.full).to.equal('May')
 				expect(calendar.monthName.short).to.equal('May')
 			})
 
 			it('should respect one based months', () => {
-				expect(calendar.monthName.number).to.equal(4)
+				expect(calendar.number).to.equal(4)
 				expect(calendar.weeks[0].dates[0].moment.format('MMMM')).to.equal('April')
 				expect(calendar.monthName.full).to.equal('April')
 				expect(calendar.monthName.short).to.equal('Apr')
@@ -423,7 +423,7 @@ describe('Headless datepicker', () => {
 			const calendar = sut.getMonth({ year: 2018, month: 12 })
 
 			expect(calendar).not.to.be.null
-			expect(calendar.monthName.number).to.equal(12)
+			expect(calendar.number).to.equal(12)
 			expect(calendar.weeks[0].weekOfYear).to.equal(48)
 			expect(calendar.weeks[0].weekOfMonth).to.equal(1)
 			expect(calendar.weeks.reduce(reduceFn).length).to.equal(31)

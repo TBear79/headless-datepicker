@@ -190,13 +190,13 @@ describe('Headless datepicker', () => {
             it('should respect zero based months', () => {
                 sut = new headless_datepicker_1.HeadlessDatepicker.Calendar({ zeroBasedMonth: true, calendarMode: 'exact' });
                 calendar = sut.getMonth(yearMonthPair);
-                chai_1.expect(calendar.monthName.number).to.equal(4);
+                chai_1.expect(calendar.number).to.equal(4);
                 chai_1.expect(calendar.weeks[0].dates[0].moment.format('MMMM')).to.equal('May');
                 chai_1.expect(calendar.monthName.full).to.equal('May');
                 chai_1.expect(calendar.monthName.short).to.equal('May');
             });
             it('should respect one based months', () => {
-                chai_1.expect(calendar.monthName.number).to.equal(4);
+                chai_1.expect(calendar.number).to.equal(4);
                 chai_1.expect(calendar.weeks[0].dates[0].moment.format('MMMM')).to.equal('April');
                 chai_1.expect(calendar.monthName.full).to.equal('April');
                 chai_1.expect(calendar.monthName.short).to.equal('Apr');
@@ -342,7 +342,7 @@ describe('Headless datepicker', () => {
             sut = new headless_datepicker_1.HeadlessDatepicker.Calendar({ calendarMode: 'exact' });
             const calendar = sut.getMonth({ year: 2018, month: 12 });
             chai_1.expect(calendar).not.to.be.null;
-            chai_1.expect(calendar.monthName.number).to.equal(12);
+            chai_1.expect(calendar.number).to.equal(12);
             chai_1.expect(calendar.weeks[0].weekOfYear).to.equal(48);
             chai_1.expect(calendar.weeks[0].weekOfMonth).to.equal(1);
             chai_1.expect(calendar.weeks.reduce(reduceFn).length).to.equal(31);

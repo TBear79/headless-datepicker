@@ -32,16 +32,23 @@ var HeadlessDatepicker;
             const range = this.getRange(startDate, endDate);
             const weekDays = this.getWeekDays(range);
             const weeks = this.getWeeks(range, this.options.calendarMode);
+            const firstDayOfMonth = this.getFirstDayOfMonthFromRange(range);
             const month = {
                 weekDayName: weekDays,
                 year: yearMonthPair.year,
-                monthName: this.getMonthNames(range, this.monthOffset),
+                number: firstDayOfMonth.moment.month() + this.monthOffset,
+                monthName: this.getMonthNames(firstDayOfMonth),
                 weeks: weeks
             };
             return month;
         }
         getMonths(yearMonthPairs) {
             return yearMonthPairs.map((item) => { return this.getMonth({ year: item.year, month: item.month }); });
+        }
+        getFirstDayOfMonthFromRange(range) {
+            return range.find((item) => {
+                return item && item.isAdjacent == false;
+            });
         }
         // createMomentDay
         hdMoment(date) {
@@ -124,12 +131,8 @@ var HeadlessDatepicker;
             }
             return weekDays;
         }
-        getMonthNames(range, monthOffset) {
-            const firstDayOfMonth = range.find((item) => {
-                return item && item.isAdjacent == false;
-            });
+        getMonthNames(firstDayOfMonth) {
             return {
-                number: firstDayOfMonth.moment.month() + monthOffset,
                 full: firstDayOfMonth.moment.format('MMMM'),
                 short: firstDayOfMonth.moment.format('MMM')
             };
