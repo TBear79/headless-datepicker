@@ -60,16 +60,24 @@ Returns an array of DateItems within a given date-span.
 
 	var calendarMonth = calendar.getMonth({ year: 2017, month: 3})
 
-	// calendarMonth contains an array
+	// calendarMonth contains an array of WeekItem objects
 ```
 
 ### getMonths
 
-## Objects
+``` javascript
+	var calendar = new HeadlessDatepicker.Calendar()
+
+	var calendarMonths = calendar.getMonths([{ year: 2017, month: 3}, { year: 2017, month: 4}, { year: 2018, month: 1}])
+
+	// calendarMonths contains an array of MonthItem objects
+```
+
+## Returned objects
 
 ### DateItem
 
-The methods getRange, getCalendar and getCalendars all returns the DateItem object, wrapped in arrays or CalendarMonth-object.
+The methods getRange and getCalendar both returns the DateItem object, wrapped in array or WeekItem-objects.
 
 ``` javascript
 {
@@ -84,16 +92,29 @@ The methods getRange, getCalendar and getCalendars all returns the DateItem obje
 	extras: any		// any additional data that you have attached to a specific date
 }
 ```
+### WeekItem
 
-### MonthCalendar
+Returned from getCalendar in an array
 
-The methods getCalendar and getCalendars both returns the MonthCalendar object. 
+```
+{
+	weekOfYear: number,
+	weekOfMonth: number,
+	dates: DateItem[]
+}
+	
+```
+
+### MonthItem
+
+The methods getCalendar and getCalendars both returns the MonthItem object. 
 
 ``` javascript
 {
 	weekDayInfo: WeekDayInfo // Use this to display week day names.
 	year: number // The year that the month belongs to
-	monthInfo: MonthInfo // Use this to display the name of the month
+	number: number	// The month number of the year
+	monthName: MonthName // Use this to display the name of the month and the month number
 	weeks: DateItem[][] // DateItems in array for each week.
 }
 ```
@@ -110,16 +131,14 @@ The week day names presented in different forms. The object is localized from th
 }
 ```
 
-### MonthInfo
+### MonthName
 
 ``` javascript
 {
-	number: number	// The month number in the year
 	full: string	// January, February, March etc.
 	short: string	// Jan, Feb, Mar etc.
 }
 ```
-
 
 
 ## Options
@@ -128,23 +147,140 @@ Options can be on initialization or at any point afterwards
 
 ### locale
 
+Default: 'en'
+
+Type: String
+
+Locale to be used locally for the moment object. [Locales in moment.js](https://momentjs.com/docs/#/i18n/)
+
 ### localeSettings
 
+Default: -
+
+Type: Any
+
+Locale settings to be used locally for the moment object. Also use this to determine the first day of the week. By default the week start on sunday. [Locales in moment.js](https://momentjs.com/docs/#/i18n/)
+
+
 ### minimumDate
+Default: -
+
+Type: Date
+
+DateItems with date before minimumDate will have isBelowMinimumDate set to true
 
 ### maximumDate
+Default: -
+
+Type: Date
+
+DateItems with date after maximumDate will have isAboveMaximumDate set to true
 
 ### disabledDates
+Default: []
+
+Type: Date[]
+
+DateItems with dates equal to dates in the disabledDates array will have isDisabled set to true
 
 ### extras
+Default: -
+
+Type: ExtraInfo
+
+DateItems with dates equal to the date in ExtraInfo will get the data attached to the extras property
+
+``` javascript
+{
+	date: Date, // The date that the extra data should be attached to
+	data: any   // Any data you wish to attach
+}
+```
 
 ### calendarMode
+Default: 'fill'
+
+Type: 'exact' | 'adjacent' | 'fill' | 'fixed'
+
+Defines the returned mode of the calendar. See the calendar modes section of this documentation.
+
 
 ### zeroBasedMonth
+Default: false
+
+Type: Boolean
+
+Determines if the month that is provided to getMonth is zero based. It also affects the number-property in MonthItem.
+
+
+## Calendar modes
+
+As an example we use April 2017. 
+Asuming we use the Javascript default, then the first week starts Sunday the 2 and the last week ends Friday the 30. This can be adjusted by setting locales for moment.js.
+
+### exact-mode
+
+Doesn't return entries for dates of the adjecent months. This means that the returned dates in the WeekInfo object look like this:
+
+||||||||
+|-------------|-------------|-------------|-------------|-------------|-------------|-------------|
+|1|
+|2|3|4|5|6|7|8|
+|9|10|11|12|13|14|15|
+|16|17|18|19|20|21|22|
+|23|24|25|26|27|28|29|
+|30|
+
+It doesn't make sence to have week day names on the top, because the first week only have one day entry
+
+
+### adjacent-mode
+
+Puts dates of the adjacent months into the first and the last week of the array
+
+|Sunday|Monday|Tueday|Wednesday|Thursday|Friday|Saturday|
+|-------------|-------------|-------------|-------------|-------------|-------------|-------------|
+|26|27|28|29|30|31|1|
+|2|3|4|5|6|7|8|
+|9|10|11|12|13|14|15|
+|16|17|18|19|20|21|22|
+|23|24|25|26|27|28|29|
+|30|1|2|3|4|5|6|
+
+### fill-mode
+
+Fills empty (null) entries into the array for first and last week. This is the default mode.
+
+|Sunday|Monday|Tueday|Wednesday|Thursday|Friday|Saturday|
+|-------------|-------------|-------------|-------------|-------------|-------------|-------------|
+|||||||1|
+|2|3|4|5|6|7|8|
+|9|10|11|12|13|14|15|
+|16|17|18|19|20|21|22|
+|23|24|25|26|27|28|29|
+|30|||||||
+
+### fixed-mode
+
+Like adjecent mode but it always returns 6 weeks. Kind of silly, but it's just like the calendar in Windows 10 :-)
+
+|Sunday|Monday|Tueday|Wednesday|Thursday|Friday|Saturday|
+|-------------|-------------|-------------|-------------|-------------|-------------|-------------|
+|26|27|28|29|30|31|1|
+|2|3|4|5|6|7|8|
+|9|10|11|12|13|14|15|
+|16|17|18|19|20|21|22|
+|23|24|25|26|27|28|29|
+|30|1|2|3|4|5|6|
+|7|8|9|10|11|12|13|
 
 ## Further reading
 
+[momentjs](https://momentjs.com/)
+
 ## Release notes
+
+1.0.0 Genesis
 
 # License
 
