@@ -163,8 +163,6 @@ export namespace HeadlessDatepicker {
                 return item && item.isAdjacent == false
             })
 
-            console.log('GETMONTHNAMES', firstDayOfMonth)
-
             return {
                 number: firstDayOfMonth.moment.month() + monthOffset,
                 full: firstDayOfMonth.moment.format('MMMM'),
