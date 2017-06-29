@@ -96,7 +96,7 @@ The methods getRange and getCalendar both returns the DateItem object, wrapped i
 
 Returned from getCalendar in an array
 
-```
+``` javascript
 {
 	weekOfYear: number,
 	weekOfMonth: number,
