@@ -215,7 +215,6 @@ export namespace HeadlessDatepicker {
 
         private splitIntoWeeks(range: DateItem[]): WeekItem[] {
             const weeks: WeekItem[] = []
-
             let startWeekNumber = range[0].moment.week()
             let endWeekNumber = range[range.length - 1].moment.week()
             let newYear = false
@@ -226,12 +225,25 @@ export namespace HeadlessDatepicker {
                 newYear = true
             }
 
+            if(startWeekNumber > endWeekNumber) {
+                startWeekNumber = 0
+            }
+
             for (var i = startWeekNumber; i <= endWeekNumber; i++) {
-                const compareWeek = newYear && i == endWeekNumber ? 1 : i
+                let compareWeek = i
+
+                if(newYear && i == endWeekNumber) {
+                    compareWeek = 1
+                }
+
+                // if true, then the reason is that startWeekNumber equals null because the first date belongs to the last week in the previous year
+                if(i == 0) {
+                    compareWeek = range[0].moment.week()
+                }
+
                 const weekDates: DateItem[] = range.filter(function (r) { return r.moment.week() == compareWeek });
                 weeks.push(this.createWeekItem(weekDates))
             }
-
 
             return weeks
         }

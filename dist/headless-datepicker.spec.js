@@ -347,6 +347,19 @@ describe('Headless datepicker', () => {
             chai_1.expect(calendar.weeks[0].weekOfMonth).to.equal(1);
             chai_1.expect(calendar.weeks.reduce(reduceFn).length).to.equal(31);
         });
+        it('should return calendar for january in any locale when first day of year belongs to the last week in the previous year', () => {
+            sut = new headless_datepicker_1.HeadlessDatepicker.Calendar({
+                locale: 'de',
+                calendarMode: 'exact',
+                zeroBasedMonth: true,
+            });
+            const calendar = sut.getMonth({ year: 2017, month: 0 });
+            chai_1.expect(calendar).not.to.be.null;
+            chai_1.expect(calendar.number).to.equal(0);
+            chai_1.expect(calendar.weeks[0].weekOfYear).to.equal(52);
+            chai_1.expect(calendar.weeks[0].weekOfMonth).to.equal(1);
+            chai_1.expect(calendar.weeks.reduce(reduceFn).length).to.equal(31);
+        });
     });
 });
 const reduceFn = (a, b) => a.dates ? a.dates.concat(b.dates) : a.concat(b.dates);

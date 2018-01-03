@@ -282,6 +282,8 @@ Like adjecent mode but it always returns 6 weeks. Kind of silly, but it's just l
 
 1.0.0 Genesis
 
+1.0.1 Fixed issue caused by the first day of year where belongs to last week in the previous year
+
 # License
 
 The MIT License (MIT)
